@@ -118,10 +118,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     protected function createNewToken($token){
+        $user = auth()->user();
+        $roles = $user->getRoleNames(); // Returns a collection
+        $permisions = $user->getPermissionsViaRoles();
         $data = ['access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user' => auth()->user()];
+            'user' => auth()->user(),
+            'roles' => $roles,
+            'permisions' => $permisions];
         return response()->json([
             'success' => true,
             'data' => $data,

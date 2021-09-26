@@ -42,8 +42,6 @@
                 Login
             </v-btn>
         </div>
-
-
     </form>
     <v-snackbar
         v-model="error_snackbar"
