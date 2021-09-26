@@ -17,10 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
-    return view('auth/login');
-});
-
 Route::get('/register', function () {
     return view('auth/register');
 });
+
+Route::get('/login/{vue_capture?}', function () {
+    return view('auth/login');
+})->where('vue_capture', '[\/\w\.-]*')->name('login');
+
+Route::get('/home/{vue_capture?}', function () {
+    return view('back_officer/home');
+})->where('vue_capture', '[\/\w\.-]*');

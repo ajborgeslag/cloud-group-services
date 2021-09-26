@@ -15,18 +15,9 @@
 </head>
 <body>
 <div id="app">
-    <v-app>
-        <!-- Sizes your content based upon application components -->
-        <v-main>
-            <!-- Provides the application the proper gutter -->
-            <v-container>
-                <!-- If using vue-router -->
-                @yield('content')
-            </v-container>
-        </v-main>
-
-    </v-app>
-
+    <router-view>
+        @yield('content')
+    </router-view>
 </div>
 <script src="{{ mix('js/app.js') }}"></script>
 </body>
