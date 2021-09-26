@@ -6,39 +6,63 @@
     <form @submit.prevent="submit">
         <validation-provider
             v-slot="{ errors }"
-            name="Name"
-            rules="required|max:10"
+            name="Email"
+            rules="required|email"
         >
             <v-text-field
-                v-model="user"
+                v-model="email"
                 :error-messages="errors"
-                label="Usuario"
+                label="Email"
                 required
             ></v-text-field>
         </validation-provider>
         <validation-provider
             v-slot="{ errors }"
-            name="email"
-            rules="required|email"
+            name="password"
+            rules="required"
         >
             <v-text-field
                 v-model="password"
                 :error-messages="errors"
                 label="Password"
+                type="password"
                 required
             ></v-text-field>
         </validation-provider>
-        <v-btn
-            class="mr-4"
-            type="submit"
-            :disabled="invalid"
-        >
-            Cancelar
-        </v-btn>
-        <v-btn @click="clear">
-            Loguin
-        </v-btn>
+        <div class="mt-4">
+            <v-btn @click="clear">
+                Cancelar
+            </v-btn>
+            <v-btn
+                class="mr-4"
+                type="submit"
+                :disabled="invalid"
+                :loading="loading"
+            >
+                Login
+            </v-btn>
+        </div>
+
+
     </form>
+    <v-snackbar
+        v-model="error_snackbar"
+        absolute
+        centered
+        elevation="24"
+    >
+        {{ error_message }}
+        <template v-slot:action="{ attrs }">
+            <v-btn
+                color="pink"
+                text
+                v-bind="attrs"
+                @click="error_snackbar = false"
+            >
+                Cerrar
+            </v-btn>
+        </template>
+    </v-snackbar>
     </validation-observer>
 </template>
 <script>
@@ -48,31 +72,17 @@ import { extend, ValidationObserver, ValidationProvider, setInteractionMode } fr
 
 setInteractionMode('eager')
 
-/*extend('digits', {
-    digits,
-    message: '{_field_} needs to be {length} digits. ({_value_})',
-})
-
 extend('required', {
-    required,
-    message: '{_field_} can not be empty',
-})
-
-extend('max', {
-    max,
-    message: '{_field_} may not be greater than {length} characters',
-})
-
-extend('regex', {
-    regex,
-    message: '{_field_} {_value_} does not match {regex}',
+    ...required,
+    message: '{_field_} requerido',
 })
 
 extend('email', {
-    email,
-    message: 'Email must be valid',
-})*/
+    ...email,
+    message: 'Email inválido',
+})
 
+import {HTTP} from '../../utils/http_commons'
 
 export default {
     components: {
@@ -80,20 +90,34 @@ export default {
         ValidationObserver,
     },
     data: () => ({
-        user: '',
-        password: ''
+        email: '',
+        password: '',
+        loading: false,
+        error_snackbar: false,
+        error_message: '',
     }),
 
     methods: {
         submit () {
             this.$refs.observer.validate()
+            this.loading = true
+            const data = {'email':this.email, password: this.password}
+            HTTP.post(`auth/login`, data)
+                .then(response => {
+                    console.log(response.data.data.access_token)
+                    localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
+                    this.loading = false
+                })
+                .catch(e => {
+                    console.log(e.response.data)
+                    this.error_snackbar = true
+                    this.error_message = e.response.data.message
+                    this.loading = false
+                })
         },
         clear () {
-            this.name = ''
-            this.phoneNumber = ''
             this.email = ''
-            this.select = null
-            this.checkbox = null
+            this.password = ''
             this.$refs.observer.reset()
         },
     },
