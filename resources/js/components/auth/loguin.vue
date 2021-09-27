@@ -1,4 +1,11 @@
 <template>
+    <v-card
+        class="mx-auto my-12 pr-8 pb-8 pl-8"
+        max-width="700"
+        elevation="15"
+        :loading = "loading"
+    >
+        <v-card-text>
     <validation-observer
         ref="observer"
         v-slot="{ invalid }"
@@ -62,6 +69,8 @@
         </template>
     </v-snackbar>
     </validation-observer>
+        </v-card-text>
+    </v-card>
 </template>
 <script>
 
@@ -104,6 +113,8 @@ export default {
                 .then(response => {
                     console.log(response.data.data.access_token)
                     localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
+                    localStorage.setItem('authenticatedUser', true);
+                    window.location.href = 'home';
                     this.loading = false
                 })
                 .catch(e => {

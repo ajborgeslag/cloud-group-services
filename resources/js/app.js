@@ -29,11 +29,57 @@ Vue.component('loguin-component', require('./components/auth/loguin').default);
  */
 
 import Vuetify from 'vuetify'
+import VueRouter from 'vue-router';
+import { routes } from './routes/routes';
 Vue.use(Vuetify);
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    mode: 'history',
+    routes
+});
+
+router.beforeEach((to, from, next) => {
+    const authenticatedUser = localStorage.getItem('authenticatedUser');
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+    if (requiresAuth && ! authenticatedUser)
+    {
+        console.log('akiiiiiiiiiii');
+        next('/login')
+    }
+    else
+        next();
+});
+
 
 
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify()
+    vuetify: new Vuetify(),
+    router,
+    data: {
+        auth: localStorage.getItem('authenticatedUser'),
+        clientes: [
+            ['Gestionar Usuarios'],
+            ['Adicionar Usuario'],
+        ],
+        servicios: [
+            ['Gestionar Servicios'],
+            ['Adicionar Servicio'],
+        ],
+        pedidos: [
+            ['Gestionar Pedidos'],
+            ['Adicionar Pedido'],
+        ],
+        proveedores: [
+            ['Gestionar Proveedores'],
+            ['Adicionar Proveedor'],
+        ],
+        coordinadores: [
+            ['Gestionar Coordinadores'],
+            ['Adicionar Coordinador'],
+        ]
+    }
 });

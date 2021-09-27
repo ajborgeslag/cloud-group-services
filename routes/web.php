@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/loguin', function () {
+/*Route::get('/login', function () {
     return view('auth/loguin');
-});
+});*/
+
+Route::get('/login/{vue_capture?}', function () {
+    return view('auth/loguin');
+})->where('vue_capture', '[\/\w\.-]*')->name('login');
+
+Route::get('/home/{vue_capture?}', function () {
+    return view('back_officer/home');
+})->where('vue_capture', '[\/\w\.-]*');

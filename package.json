@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "vee-validate": "^3.4.13",
+        "vue-router": "^3.5.2",
         "vuetify": "^2.5.8"
     }
 }
