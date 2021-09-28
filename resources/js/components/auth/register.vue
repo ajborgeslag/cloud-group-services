@@ -1,4 +1,11 @@
 <template>
+    <v-card
+        class="mx-auto my-12 pr-8 pb-8 pl-8"
+        max-width="700"
+        elevation="15"
+        :loading = "loading"
+    >
+        <v-card-text>
     <validation-observer
         ref="observer"
         v-slot="{ invalid }"
@@ -13,19 +20,6 @@
                 v-model="name"
                 :error-messages="errors"
                 label="Name"
-                required
-            ></v-text-field>
-        </validation-provider>
-
-        <validation-provider
-            v-slot="{ errors }"
-            name="Last Name"
-            rules="required|max:20"
-        >
-            <v-text-field
-                v-model="lastName"
-                :error-messages="errors"
-                label="Last Name"
                 required
             ></v-text-field>
         </validation-provider>
@@ -63,7 +57,7 @@
             rules="required"
         >
             <v-text-field
-                v-model="password"
+                v-model="passwordAgain"
                 :error-messages="errors"
                 label="Repeat Password"
                 type="password"
@@ -106,6 +100,8 @@
         </template>
     </v-snackbar>
     </validation-observer>
+            </v-card-text>
+        </v-card>
 </template>
 <script>
 
@@ -133,9 +129,9 @@ export default {
     },
     data: () => ({
         name: '',
-        lastName: '',
         email: '',
         password: '',
+        passwordAgain: '',
         loading: false,
         error_snackbar: false,
         error_message: '',
@@ -145,21 +141,30 @@ export default {
         submit () {
             this.$refs.observer.validate()
             this.loading = true
-            const data = {name :this.name, lastName:this.lastName, 'email':this.email, password: this.password}
-            HTTP.post(`auth/register`, data)
-                .then(response => {
-                    console.log(response.data.data.access_token)
-                    localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
-                    this.loading = false
-                })
-                .catch(e => {
+            const data = {name :this.name, email:this.email, password: this.password, passwordAgain: this.passwordAgain}
+            if (this.password.equals(this.passwordAgain)) {
+                HTTP.post(`auth/register`, data)
+                    .then(response => {
+                        console.log(response.data.data.access_token)
+                        localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
+                        localStorage.setItem('authenticatedUser', true);
+                        window.location.href = 'home';
+                        this.loading = false
+                    })
+                    .catch(e => {
                     console.log(e.response.data)
                     this.error_snackbar = true
                     this.error_message = e.response.data.message
                     this.loading = false
                 })
+            }else{
+                console.log('Las contraseñas deben coincidir')
+                this.clear()
+            }
+
         },
         clear () {
+            this.name = ''
             this.email = ''
             this.password = ''
             this.$refs.observer.reset()

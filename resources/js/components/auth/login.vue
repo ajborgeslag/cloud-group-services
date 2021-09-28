@@ -37,9 +37,9 @@
             ></v-text-field>
         </validation-provider>
         <div class="mt-4">
-            <v-btn @click="clear">
+            <!--<v-btn @click="clear">
                 Cancelar
-            </v-btn>
+            </v-btn>-->
             <v-btn
                 class="mr-4"
                 type="submit"

@@ -2363,10 +2363,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 (0,vee_validate__WEBPACK_IMPORTED_MODULE_0__.setInteractionMode)('eager');
@@ -2385,9 +2381,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       name: '',
-      lastName: '',
       email: '',
       password: '',
+      passwordAgain: '',
       loading: false,
       error_snackbar: false,
       error_message: ''
@@ -2401,22 +2397,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.loading = true;
       var data = {
         name: this.name,
-        lastName: this.lastName,
         'email': this.email,
-        password: this.password
+        password: this.password,
+        passwordAgain: this.passwordAgain
       };
-      _utils_http_commons__WEBPACK_IMPORTED_MODULE_2__.HTTP.post("auth/register", data).then(function (response) {
-        console.log(response.data.data.access_token);
-        localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
-        _this.loading = false;
-      })["catch"](function (e) {
-        console.log(e.response.data);
-        _this.error_snackbar = true;
-        _this.error_message = e.response.data.message;
-        _this.loading = false;
-      });
+
+      if (this.password.equals(this.passwordAgain)) {
+        _utils_http_commons__WEBPACK_IMPORTED_MODULE_2__.HTTP.post("auth/register", data).then(function (response) {
+          console.log(response.data.data.access_token);
+          localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
+          localStorage.setItem('authenticatedUser', true);
+          window.location.href = 'home';
+          _this.loading = false;
+        })["catch"](function (e) {
+          console.log(e.response.data);
+          _this.error_snackbar = true;
+          _this.error_message = e.response.data.message;
+          _this.loading = false;
+        });
+      } else {
+        console.log('Las contraseñas deben coincidir');
+        this.clear();
+      }
     },
     clear: function clear() {
+      this.name = '';
       this.email = '';
       this.password = '';
       this.$refs.observer.reset();
@@ -2466,15 +2471,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _routes_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes/routes */ "./resources/js/routes/routes.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _routes_routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes/routes */ "./resources/js/routes/routes.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"];
@@ -2488,9 +2496,9 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
-Vue.component('loguin-component', __webpack_require__(/*! ./components/auth/login */ "./resources/js/components/auth/login.vue")["default"]);
-Vue.component('register-component', __webpack_require__(/*! ./components/auth/register */ "./resources/js/components/auth/register.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('login-component', __webpack_require__(/*! ./components/auth/login */ "./resources/js/components/auth/login.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('register-component', __webpack_require__(/*! ./components/auth/register */ "./resources/js/components/auth/register.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -2500,11 +2508,11 @@ Vue.component('register-component', __webpack_require__(/*! ./components/auth/re
 
 
 
-Vue.use((vuetify__WEBPACK_IMPORTED_MODULE_1___default()));
-Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].use((vuetify__WEBPACK_IMPORTED_MODULE_2___default()));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]({
   mode: 'history',
-  routes: _routes_routes__WEBPACK_IMPORTED_MODULE_0__.routes
+  routes: _routes_routes__WEBPACK_IMPORTED_MODULE_1__.routes
 });
 router.beforeEach(function (to, from, next) {
   var authenticatedUser = localStorage.getItem('authenticatedUser');
@@ -2517,9 +2525,9 @@ router.beforeEach(function (to, from, next) {
     next('/login');
   } else next();
 });
-var app = new Vue({
+var app = new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
   el: '#app',
-  vuetify: new (vuetify__WEBPACK_IMPORTED_MODULE_1___default())(),
+  vuetify: new (vuetify__WEBPACK_IMPORTED_MODULE_2___default())(),
   router: router,
   data: {
     auth: localStorage.getItem('authenticatedUser'),
@@ -2588,21 +2596,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "routes": () => (/* binding */ routes)
 /* harmony export */ });
-/* harmony import */ var _components_auth_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/auth/login */ "./resources/js/components/auth/login.vue");
-/* harmony import */ var _components_back_officer_home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/back_officer/home */ "./resources/js/components/back_officer/home.vue");
+/* harmony import */ var _components_auth_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/auth/register */ "./resources/js/components/auth/register.vue");
+/* harmony import */ var _components_auth_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/auth/login */ "./resources/js/components/auth/login.vue");
+/* harmony import */ var _components_back_officer_home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/back_officer/home */ "./resources/js/components/back_officer/home.vue");
+
 
 
 var routes = [{
   path: '/home',
-  component: _components_back_officer_home__WEBPACK_IMPORTED_MODULE_1__["default"],
+  component: _components_back_officer_home__WEBPACK_IMPORTED_MODULE_2__["default"],
   name: 'home',
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/login',
-  component: _components_auth_login__WEBPACK_IMPORTED_MODULE_0__["default"],
+  component: _components_auth_login__WEBPACK_IMPORTED_MODULE_1__["default"],
   name: 'login'
+}, {
+  path: '/register',
+  component: _components_auth_register__WEBPACK_IMPORTED_MODULE_0__["default"],
+  name: 'register'
 }];
 
 /***/ }),
@@ -41286,10 +41300,6 @@ var render = function() {
                           "div",
                           { staticClass: "mt-4" },
                           [
-                            _c("v-btn", { on: { click: _vm.clear } }, [
-                              _vm._v("\n            Cancelar\n        ")
-                            ]),
-                            _vm._v(" "),
                             _c(
                               "v-btn",
                               {
@@ -41389,266 +41399,253 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("validation-observer", {
-    ref: "observer",
-    scopedSlots: _vm._u([
-      {
-        key: "default",
-        fn: function(ref) {
-          var invalid = ref.invalid
-          return [
-            _c(
-              "form",
+  return _c(
+    "v-card",
+    {
+      staticClass: "mx-auto my-12 pr-8 pb-8 pl-8",
+      attrs: { "max-width": "700", elevation: "15", loading: _vm.loading }
+    },
+    [
+      _c(
+        "v-card-text",
+        [
+          _c("validation-observer", {
+            ref: "observer",
+            scopedSlots: _vm._u([
               {
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.submit.apply(null, arguments)
-                  }
-                }
-              },
-              [
-                _c("validation-provider", {
-                  attrs: { name: "Name", rules: "required|max:20" },
-                  scopedSlots: _vm._u(
-                    [
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var errors = ref.errors
-                          return [
-                            _c("v-text-field", {
-                              attrs: {
-                                "error-messages": errors,
-                                label: "Name",
-                                required: ""
-                              },
-                              model: {
-                                value: _vm.name,
-                                callback: function($$v) {
-                                  _vm.name = $$v
-                                },
-                                expression: "name"
-                              }
-                            })
-                          ]
-                        }
-                      }
-                    ],
-                    null,
-                    true
-                  )
-                }),
-                _vm._v(" "),
-                _c("validation-provider", {
-                  attrs: { name: "Last Name", rules: "required|max:20" },
-                  scopedSlots: _vm._u(
-                    [
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var errors = ref.errors
-                          return [
-                            _c("v-text-field", {
-                              attrs: {
-                                "error-messages": errors,
-                                label: "Last Name",
-                                required: ""
-                              },
-                              model: {
-                                value: _vm.lastName,
-                                callback: function($$v) {
-                                  _vm.lastName = $$v
-                                },
-                                expression: "lastName"
-                              }
-                            })
-                          ]
-                        }
-                      }
-                    ],
-                    null,
-                    true
-                  )
-                }),
-                _vm._v(" "),
-                _c("validation-provider", {
-                  attrs: { name: "Email", rules: "required|email" },
-                  scopedSlots: _vm._u(
-                    [
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var errors = ref.errors
-                          return [
-                            _c("v-text-field", {
-                              attrs: {
-                                "error-messages": errors,
-                                label: "Email",
-                                required: ""
-                              },
-                              model: {
-                                value: _vm.email,
-                                callback: function($$v) {
-                                  _vm.email = $$v
-                                },
-                                expression: "email"
-                              }
-                            })
-                          ]
-                        }
-                      }
-                    ],
-                    null,
-                    true
-                  )
-                }),
-                _vm._v(" "),
-                _c("validation-provider", {
-                  attrs: { name: "password", rules: "required" },
-                  scopedSlots: _vm._u(
-                    [
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var errors = ref.errors
-                          return [
-                            _c("v-text-field", {
-                              attrs: {
-                                "error-messages": errors,
-                                label: "Password",
-                                type: "password",
-                                required: ""
-                              },
-                              model: {
-                                value: _vm.password,
-                                callback: function($$v) {
-                                  _vm.password = $$v
-                                },
-                                expression: "password"
-                              }
-                            })
-                          ]
-                        }
-                      }
-                    ],
-                    null,
-                    true
-                  )
-                }),
-                _vm._v(" "),
-                _c("validation-provider", {
-                  attrs: { name: "repeatPassword", rules: "required" },
-                  scopedSlots: _vm._u(
-                    [
-                      {
-                        key: "default",
-                        fn: function(ref) {
-                          var errors = ref.errors
-                          return [
-                            _c("v-text-field", {
-                              attrs: {
-                                "error-messages": errors,
-                                label: "Repeat Password",
-                                type: "password",
-                                required: ""
-                              },
-                              model: {
-                                value: _vm.password,
-                                callback: function($$v) {
-                                  _vm.password = $$v
-                                },
-                                expression: "password"
-                              }
-                            })
-                          ]
-                        }
-                      }
-                    ],
-                    null,
-                    true
-                  )
-                }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "mt-4" },
-                  [
+                key: "default",
+                fn: function(ref) {
+                  var invalid = ref.invalid
+                  return [
                     _c(
-                      "v-btn",
-                      { attrs: { href: "/login" }, on: { click: _vm.clear } },
-                      [_vm._v("\n            Cancel\n        ")]
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.submit.apply(null, arguments)
+                          }
+                        }
+                      },
+                      [
+                        _c("validation-provider", {
+                          attrs: { name: "Name", rules: "required|max:20" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "error-messages": errors,
+                                        label: "Name",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.name,
+                                        callback: function($$v) {
+                                          _vm.name = $$v
+                                        },
+                                        expression: "name"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("validation-provider", {
+                          attrs: { name: "Email", rules: "required|email" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "error-messages": errors,
+                                        label: "Email",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.email,
+                                        callback: function($$v) {
+                                          _vm.email = $$v
+                                        },
+                                        expression: "email"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("validation-provider", {
+                          attrs: { name: "password", rules: "required" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "error-messages": errors,
+                                        label: "Password",
+                                        type: "password",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.password,
+                                        callback: function($$v) {
+                                          _vm.password = $$v
+                                        },
+                                        expression: "password"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("validation-provider", {
+                          attrs: { name: "repeatPassword", rules: "required" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "error-messages": errors,
+                                        label: "Repeat Password",
+                                        type: "password",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.passwordAgain,
+                                        callback: function($$v) {
+                                          _vm.passwordAgain = $$v
+                                        },
+                                        expression: "passwordAgain"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "mt-4" },
+                          [
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { href: "/login" },
+                                on: { click: _vm.clear }
+                              },
+                              [_vm._v("\n            Cancel\n        ")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                staticClass: "mr-4",
+                                attrs: {
+                                  type: "submit",
+                                  disabled: invalid,
+                                  loading: _vm.loading
+                                }
+                              },
+                              [_vm._v("\n            Register\n        ")]
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "v-snackbar",
                       {
-                        staticClass: "mr-4",
-                        attrs: {
-                          type: "submit",
-                          disabled: invalid,
-                          loading: _vm.loading
+                        attrs: { absolute: "", centered: "", elevation: "24" },
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "action",
+                              fn: function(ref) {
+                                var attrs = ref.attrs
+                                return [
+                                  _c(
+                                    "v-btn",
+                                    _vm._b(
+                                      {
+                                        attrs: { color: "pink", text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.error_snackbar = false
+                                          }
+                                        }
+                                      },
+                                      "v-btn",
+                                      attrs,
+                                      false
+                                    ),
+                                    [_vm._v("\n            Cerrar\n        ")]
+                                  )
+                                ]
+                              }
+                            }
+                          ],
+                          null,
+                          true
+                        ),
+                        model: {
+                          value: _vm.error_snackbar,
+                          callback: function($$v) {
+                            _vm.error_snackbar = $$v
+                          },
+                          expression: "error_snackbar"
                         }
                       },
-                      [_vm._v("\n            Register\n        ")]
+                      [_vm._v("\n    " + _vm._s(_vm.error_message) + "\n    ")]
                     )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "v-snackbar",
-              {
-                attrs: { absolute: "", centered: "", elevation: "24" },
-                scopedSlots: _vm._u(
-                  [
-                    {
-                      key: "action",
-                      fn: function(ref) {
-                        var attrs = ref.attrs
-                        return [
-                          _c(
-                            "v-btn",
-                            _vm._b(
-                              {
-                                attrs: { color: "pink", text: "" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.error_snackbar = false
-                                  }
-                                }
-                              },
-                              "v-btn",
-                              attrs,
-                              false
-                            ),
-                            [_vm._v("\n            Cerrar\n        ")]
-                          )
-                        ]
-                      }
-                    }
-                  ],
-                  null,
-                  true
-                ),
-                model: {
-                  value: _vm.error_snackbar,
-                  callback: function($$v) {
-                    _vm.error_snackbar = $$v
-                  },
-                  expression: "error_snackbar"
+                  ]
                 }
-              },
-              [_vm._v("\n    " + _vm._s(_vm.error_message) + "\n    ")]
-            )
-          ]
-        }
-      }
-    ])
-  })
+              }
+            ])
+          })
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
