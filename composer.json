@@ -15,7 +15,8 @@
         "laravel/ui": "^3.3",
         "spatie/laravel-permission": "^5.1",
         "tymon/jwt-auth": "^1.0",
-        "barryvdh/laravel-ide-helper": ">=1.0"
+        "barryvdh/laravel-ide-helper": ">=1.0",
+      "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

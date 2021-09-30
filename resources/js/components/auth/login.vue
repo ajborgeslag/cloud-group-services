@@ -18,6 +18,9 @@
         >
             <v-text-field
                 v-model="email"
+                clear-icon="mdi-close"
+                clearable
+                @click:clear="clearMessage"
                 :error-messages="errors"
                 label="Email"
                 required
@@ -30,9 +33,15 @@
         >
             <v-text-field
                 v-model="password"
+                clear-icon="mdi-close"
+                clearable
+                @click:clear="clearMessage"
                 :error-messages="errors"
+                :rules="[(v => !!v || 'Password is required') && minimumChar]"
+                @click:append="showPassword = !showPassword"
+                :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password"
-                type="password"
                 required
             ></v-text-field>
         </validation-provider>
@@ -102,13 +111,15 @@ export default {
         loading: false,
         error_snackbar: false,
         error_message: '',
+        showPassword:false,
+        minimumChar: v => v.length >= 8 || 'Min 8 characters',
     }),
 
     methods: {
         submit () {
             this.$refs.observer.validate()
             this.loading = true
-            const data = {'email':this.email, password: this.password}
+            const data = {email:this.email, password: this.password}
             HTTP.post(`auth/login`, data)
                 .then(response => {
                     console.log(response.data.data.access_token)
@@ -128,6 +139,9 @@ export default {
             this.email = ''
             this.password = ''
             this.$refs.observer.reset()
+        },
+        clearMessage () {
+            this.message = ''
         },
     },
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,8 @@ Route::get('/register/{vue_capture?}', function () {
 
 Route::get('/home/{vue_capture?}', function () {
     return view('back_officer/home');
+})->where('vue_capture', '[\/\w\.-]*');
+
+Route::get('/manage/{vue_capture?}', function () {
+    return view('back_officer/clients/manage');
 })->where('vue_capture', '[\/\w\.-]*');

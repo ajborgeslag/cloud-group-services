@@ -13,13 +13,32 @@
     <form @submit.prevent="submit">
         <validation-provider
             v-slot="{ errors }"
-            name="Name"
-            rules="required|max:20"
+            name="first_name"
+            rules="required"
+            :counter = 20
         >
             <v-text-field
-                v-model="name"
+                v-model="first_name"
+                clear-icon="mdi-close"
+                clearable
                 :error-messages="errors"
-                label="Name"
+                label="First Name"
+                required
+            ></v-text-field>
+        </validation-provider>
+
+        <validation-provider
+            v-slot="{ errors }"
+            name="last_name"
+            rules="required"
+            :counter = 20
+        >
+            <v-text-field
+                v-model="last_name"
+                clear-icon="mdi-close"
+                clearable
+                :error-messages="errors"
+                label="Last Name"
                 required
             ></v-text-field>
         </validation-provider>
@@ -31,6 +50,8 @@
         >
             <v-text-field
                 v-model="email"
+                clear-icon="mdi-close"
+                clearable
                 :error-messages="errors"
                 label="Email"
                 required
@@ -44,9 +65,14 @@
         >
             <v-text-field
                 v-model="password"
+                clear-icon="mdi-close"
+                clearable
                 :error-messages="errors"
+                :rules="[(v => !!v || 'Password is required') && minimumChar]"
+                @click:append="showPassword = !showPassword"
+                :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password"
-                type="password"
                 required
             ></v-text-field>
         </validation-provider>
@@ -58,9 +84,15 @@
         >
             <v-text-field
                 v-model="passwordAgain"
+                clear-icon="mdi-close"
+                clearable
+                @click:clear="clearMessage"
                 :error-messages="errors"
+                :rules="[(password === passwordAgain) || 'Password must match']"
+                @click:append="showRepeatPassword = !showRepeatPassword"
+                :append-icon="showRepeatPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                :type="showRepeatPassword ? 'text' : 'password'"
                 label="Repeat Password"
-                type="password"
                 required
             ></v-text-field>
         </validation-provider>
@@ -128,21 +160,25 @@ export default {
         ValidationObserver,
     },
     data: () => ({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         passwordAgain: '',
         loading: false,
         error_snackbar: false,
         error_message: '',
+        showRepeatPassword:false,
+        showPassword:false,
+        minimumChar: v => v.length >= 8 || 'Min 8 characters',
+
     }),
 
     methods: {
         submit () {
             this.$refs.observer.validate()
             this.loading = true
-            const data = {name :this.name, email:this.email, password: this.password, passwordAgain: this.passwordAgain}
-            if (this.password.equals(this.passwordAgain)) {
+            const data = {first_name :this.first_name, last_name :this.last_name, email:this.email, password: this.password}
                 HTTP.post(`auth/register`, data)
                     .then(response => {
                         console.log(response.data.data.access_token)
@@ -157,18 +193,18 @@ export default {
                     this.error_message = e.response.data.message
                     this.loading = false
                 })
-            }else{
-                console.log('Las contraseñas deben coincidir')
-                this.clear()
-            }
+            },
+        clearMessage () {
+            this.message = ''
+        }
 
         },
         clear () {
-            this.name = ''
+            this.first_name = ''
+            this.last_name = ''
             this.email = ''
             this.password = ''
             this.$refs.observer.reset()
         },
-    },
-}
+    }
 </script>
