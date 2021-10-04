@@ -28,7 +28,7 @@
         </validation-provider>
         <validation-provider
             v-slot="{ errors }"
-            name="password"
+            name="Password"
             rules="required"
         >
             <v-text-field
@@ -37,7 +37,7 @@
                 clearable
                 @click:clear="clearMessage"
                 :error-messages="errors"
-                :rules="[(v => !!v || 'Password is required') && minimumChar]"
+                :rules="[v => !!v || 'Password is required']"
                 @click:append="showPassword = !showPassword"
                 :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                 :type="showPassword ? 'text' : 'password'"
@@ -112,7 +112,6 @@ export default {
         error_snackbar: false,
         error_message: '',
         showPassword:false,
-        minimumChar: v => v.length >= 8 || 'Min 8 characters',
     }),
 
     methods: {

@@ -13,7 +13,7 @@
     <form @submit.prevent="submit">
         <validation-provider
             v-slot="{ errors }"
-            name="first_name"
+            name="First Name"
             rules="required"
             :counter = 20
         >
@@ -29,7 +29,7 @@
 
         <validation-provider
             v-slot="{ errors }"
-            name="last_name"
+            name="Last Name"
             rules="required"
             :counter = 20
         >
@@ -60,7 +60,7 @@
 
         <validation-provider
             v-slot="{ errors }"
-            name="password"
+            name="Password"
             rules="required"
         >
             <v-text-field
@@ -79,7 +79,7 @@
 
         <validation-provider
             v-slot="{ errors }"
-            name="repeatPassword"
+            name="Repeat Password"
             rules="required"
         >
             <v-text-field
