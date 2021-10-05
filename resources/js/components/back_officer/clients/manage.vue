@@ -159,11 +159,12 @@ export default {
             },
     }),
 
-    // computed: {
-    //     formTitle () {
-    //         return this.editedIndex// === -1 ? 'New Item' : 'Edit Item'
-    //     },
-    // },
+    computed: {
+        formTitle () {
+            //return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+            return 'Edit Item'
+        },
+    },
 
     watch: {
         dialog (val) {
@@ -281,7 +282,16 @@ export default {
         },
 
         deleteItemConfirm () {
-            this.elements.splice(this.editedIndex, 1)
+            // this.elements.splice(this.editedIndex, 1)
+            // this.closeDelete()
+
+            if (this.editedIndex > -1) {
+                Object.assign(this.elements[this.editedIndex], this.editedItem)
+            } else {
+                // this.elements.push(this.editedItem)
+                this.elements.splice(this.editedIndex, 1)
+            }
+            // this.close()
             this.closeDelete()
         },
 

@@ -2662,11 +2662,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  // computed: {
-  //     formTitle () {
-  //         return this.editedIndex// === -1 ? 'New Item' : 'Edit Item'
-  //     },
-  // },
+  computed: {
+    formTitle: function formTitle() {
+      //return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return 'Edit Item';
+    }
+  },
   watch: {
     dialog: function dialog(val) {
       val || this.close();
@@ -2763,7 +2764,16 @@ __webpack_require__.r(__webpack_exports__);
       this.dialogDelete = true;
     },
     deleteItemConfirm: function deleteItemConfirm() {
-      this.elements.splice(this.editedIndex, 1);
+      // this.elements.splice(this.editedIndex, 1)
+      // this.closeDelete()
+      if (this.editedIndex > -1) {
+        Object.assign(this.elements[this.editedIndex], this.editedItem);
+      } else {
+        // this.elements.push(this.editedItem)
+        this.elements.splice(this.editedIndex, 1);
+      } // this.close()
+
+
       this.closeDelete();
     },
     close: function close() {

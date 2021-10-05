@@ -19,38 +19,6 @@ class UserService
         $this->roleService = new RoleService();
     }
 
-    public function store($user)
-    {
-        try {
-            /*--------------- Insert User --------------------*/
-            $n_child = User::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => property_exists($user, 'password') ? bcrypt($user->password) : null,
-                'verification_code' => strtolower(Str::random(30))
-            ]);
-            if($n_child)
-            {
-                $this->storeLocationsRoles($n_child, $user->locations);
-                return $n_child;
-            }
-            else return null;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    public function addLocation($user)
-    {
-        try {
-            /*--------------- Insert Locations --------------------*/
-            $this->storeLocationsRoles($user, $user->locations);
-            return $user;
-
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
 
     public function getUser($userId)
     {
@@ -139,57 +107,6 @@ class UserService
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
-    }
-
-    /*--------------- Insert User Roles--------------------*/
-    public function storeLocationsRoles($user, $locations)
-    {
-        try {
-            foreach ($locations as $location)
-            {
-                foreach ($location->roles as $role)
-                {
-                    $roleId = $this->roleService->getRoleByCode($role->code)->id;
-                    ReUserLocationRole::create([
-                        'user_id' => $user->id,
-                        'role_id' => $roleId,
-                        'location_id' => $location->id
-                    ]);
-                }
-            }
-            return true;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    /*--------------- Insert User Roles--------------------*/
-    public function existLocationsRoles($user, $locations)
-    {
-        try {
-            foreach ($locations as $location)
-            {
-                foreach ($location->roles as $role)
-                {
-                    $roleId = $this->roleService->getRoleByCode($role->code)->id;
-                    $result = ReUserLocationRole::where('user_id',$user->id)->where('role_id', $roleId)->where('location_id', $location->id)->first();
-                    if($result!=null)
-                        return true;
-                }
-            }
-            return false;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * @param $user
-     * @return array of locations and roles
-     */
-    public function getLocations($user)
-    {
-        return $user->getLocations();
     }
 
     public function update($userId, $userNew)
