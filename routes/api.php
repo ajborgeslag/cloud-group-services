@@ -31,5 +31,6 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
-
+/** Users */
+Route::post('/user/search',[UserController::class, 'search']);
 Route::get('/manage/{user}', [UserController::class, 'show']);

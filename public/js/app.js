@@ -2491,20 +2491,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _utils_http_commons__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils/http_commons */ "./resources/js/utils/http_commons.js");
 //
 //
 //
@@ -2624,48 +2611,43 @@ __webpack_require__.r(__webpack_exports__);
 /*export default {
     name: "manage"
 }*/
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      totalElements: 0,
+      elements: [],
+      loading: true,
+      options: {},
       dialog: false,
       dialogDelete: false,
       search: '',
       columns: [{
-        text: 'First Name',
-        value: 'firstname'
+        text: 'Nombre',
+        value: 'name'
       }, {
-        text: 'Last Name',
-        value: 'lastname'
-      }, {
-        text: 'Email',
+        text: 'Correo',
         value: 'email'
       }, {
-        text: 'Address',
-        value: 'address'
-      }, {
-        text: 'Actions',
+        text: 'Acciones',
         value: 'actions',
         sortable: false
       }],
       editedIndex: -1,
       editedItem: {
-        firstname: '',
-        lastname: '',
-        email: '',
-        address: ''
+        named: '',
+        email: ''
       },
       defaultItem: {
-        firstname: '',
-        lastname: '',
-        email: '',
-        address: ''
+        name: '',
+        email: ''
       }
     };
   },
   computed: {
     formTitle: function formTitle() {
       //return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      return 'Edit Item';
+      return 'Editar Cliente';
     }
   },
   watch: {
@@ -2674,84 +2656,58 @@ __webpack_require__.r(__webpack_exports__);
     },
     dialogDelete: function dialogDelete(val) {
       val || this.closeDelete();
+    },
+    options: {
+      handler: function handler() {
+        this.getDataFromApi();
+      },
+      deep: true
+    },
+    search: {
+      handler: function handler() {
+        this.getDataFromApi();
+      },
+      deep: true
     }
   },
   created: function created() {
     this.initialize();
   },
   methods: {
-    initialize: function initialize() {
-      this.elements = [{
-        firstname: 'Miguel',
-        lastname: 'Abreu',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 891 apto 25 zona 5 Alamar'
-      }, {
-        firstname: 'Alejandro',
-        lastname: 'Borges',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 892 apto 26 zona 6 Alamar'
-      }, {
-        firstname: 'Guillermo',
-        lastname: 'Abreu',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 893 apto 27 zona 7 Alamar'
-      }, {
-        firstname: 'Javier',
-        lastname: 'Borges',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 894 apto 28 zona 9 Alamar'
-      }, {
-        firstname: 'Roberto',
-        lastname: 'Quintana',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 895 apto 29 zona 10 Alamar'
-      }, {
-        firstname: 'Lisuan',
-        lastname: 'Martinez',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 896 apto 24 zona 58 Alamar'
-      }, {
-        firstname: 'Christian',
-        lastname: 'Martinez',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 897 apto 23 zona 47 Alamar'
-      }, {
-        firstname: 'Miguel',
-        lastname: 'Abreu',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 891 apto 25 zona 5 Alamar'
-      }, {
-        firstname: 'Alejandro',
-        lastname: 'Borges',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 892 apto 26 zona 6 Alamar'
-      }, {
-        firstname: 'Guillermo',
-        lastname: 'Abreu',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 893 apto 27 zona 7 Alamar'
-      }, {
-        firstname: 'Javier',
-        lastname: 'Borges',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 894 apto 28 zona 9 Alamar'
-      }, {
-        firstname: 'Roberto',
-        lastname: 'Quintana',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 895 apto 29 zona 10 Alamar'
-      }, {
-        firstname: 'Lisuan',
-        lastname: 'Martinez',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 896 apto 24 zona 58 Alamar'
-      }, {
-        firstname: 'Christian',
-        lastname: 'Martinez',
-        email: 'mabreucardenas95@gmail.com',
-        address: 'edif 897 apto 23 zona 47 Alamar'
-      }];
+    getDataFromApi: function getDataFromApi() {
+      var _this = this;
+
+      var _this$options = this.options,
+          sortBy = _this$options.sortBy,
+          sortDesc = _this$options.sortDesc,
+          page = _this$options.page,
+          itemsPerPage = _this$options.itemsPerPage;
+      this.loading = true;
+      var data = {
+        page: page,
+        itemsPerPage: itemsPerPage,
+        search: this.search
+      };
+      _utils_http_commons__WEBPACK_IMPORTED_MODULE_0__.HTTP.post("user/search", data).then(function (response) {
+        console.log(response);
+        _this.elements = response.data.data.items;
+        _this.totalElements = response.data.data.total;
+        _this.loading = false;
+      })["catch"](function (e) {
+        _this.loading = false;
+      });
+    },
+    fakeApiCall: function fakeApiCall() {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        console.log(_this2.options);
+        var _this2$options = _this2.options,
+            sortBy = _this2$options.sortBy,
+            sortDesc = _this2$options.sortDesc,
+            page = _this2$options.page,
+            itemsPerPage = _this2$options.itemsPerPage;
+      });
     },
     editItem: function editItem(item) {
       this.editedIndex = this.elements.indexOf(item);
@@ -2777,21 +2733,21 @@ __webpack_require__.r(__webpack_exports__);
       this.closeDelete();
     },
     close: function close() {
-      var _this = this;
+      var _this3 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this.editedItem = Object.assign({}, _this.defaultItem);
-        _this.editedIndex = -1;
+        _this3.editedItem = Object.assign({}, _this3.defaultItem);
+        _this3.editedIndex = -1;
       });
     },
     closeDelete: function closeDelete() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.dialogDelete = false;
       this.$nextTick(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
+        _this4.editedItem = Object.assign({}, _this4.defaultItem);
+        _this4.editedIndex = -1;
       });
     },
     save: function save() {
@@ -42233,13 +42189,13 @@ var render = function() {
       _c(
         "v-card-title",
         [
-          _vm._v("\n\n        Users\n\n        "),
+          _vm._v("\n\n        Clientes\n\n        "),
           _c("v-spacer"),
           _vm._v(" "),
           _c("v-text-field", {
             attrs: {
               "append-icon": "mdi-magnify",
-              label: "Search",
+              label: "Buscar",
               "single-line": "",
               "hide-details": ""
             },
@@ -42259,7 +42215,14 @@ var render = function() {
         attrs: {
           headers: _vm.columns,
           items: _vm.elements,
-          search: _vm.search
+          options: _vm.options,
+          "server-items-length": _vm.totalElements,
+          loading: _vm.loading
+        },
+        on: {
+          "update:options": function($event) {
+            _vm.options = $event
+          }
         },
         scopedSlots: _vm._u([
           {
@@ -42301,38 +42264,17 @@ var render = function() {
                                       "v-col",
                                       [
                                         _c("v-text-field", {
-                                          attrs: { label: "First Name" },
+                                          attrs: { label: "Nombre" },
                                           model: {
-                                            value: _vm.editedItem.firstname,
+                                            value: _vm.editedItem.name,
                                             callback: function($$v) {
                                               _vm.$set(
                                                 _vm.editedItem,
-                                                "firstname",
+                                                "name",
                                                 $$v
                                               )
                                             },
-                                            expression: "editedItem.firstname"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Last Name" },
-                                          model: {
-                                            value: _vm.editedItem.lastname,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "lastname",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.lastname"
+                                            expression: "editedItem.name"
                                           }
                                         })
                                       ],
@@ -42349,7 +42291,7 @@ var render = function() {
                                       "v-col",
                                       [
                                         _c("v-text-field", {
-                                          attrs: { label: "Email" },
+                                          attrs: { label: "Correo" },
                                           model: {
                                             value: _vm.editedItem.email,
                                             callback: function($$v) {
@@ -42360,33 +42302,6 @@ var render = function() {
                                               )
                                             },
                                             expression: "editedItem.email"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Address" },
-                                          model: {
-                                            value: _vm.editedItem.address,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "address",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.address"
                                           }
                                         })
                                       ],
@@ -42415,7 +42330,7 @@ var render = function() {
                               },
                               [
                                 _vm._v(
-                                  "\n                                    Cancel\n                                "
+                                  "\n                                    Cancelar\n                                "
                                 )
                               ]
                             ),
@@ -42428,7 +42343,7 @@ var render = function() {
                               },
                               [
                                 _vm._v(
-                                  "\n                                    Save\n                                "
+                                  "\n                                    Salvar\n                                "
                                 )
                               ]
                             )
@@ -42459,7 +42374,7 @@ var render = function() {
                       "v-card",
                       [
                         _c("v-card-title", { staticClass: "text-h5" }, [
-                          _vm._v("Are you sure you want to delete this item?")
+                          _vm._v("Está seguro que desea eliminar el cliente ?")
                         ]),
                         _vm._v(" "),
                         _c(
@@ -42473,7 +42388,7 @@ var render = function() {
                                 attrs: { color: "blue darken-1", text: "" },
                                 on: { click: _vm.closeDelete }
                               },
-                              [_vm._v("Cancel")]
+                              [_vm._v("Cancelar")]
                             ),
                             _vm._v(" "),
                             _c(
@@ -42482,7 +42397,7 @@ var render = function() {
                                 attrs: { color: "blue darken-1", text: "" },
                                 on: { click: _vm.deleteItemConfirm }
                               },
-                              [_vm._v("OK")]
+                              [_vm._v("Aceptar")]
                             ),
                             _vm._v(" "),
                             _c("v-spacer")
@@ -103299,7 +103214,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_vue__;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\xampp\\\\htdocs\\\\Trabajo Cloud-Group-Services\\\\cloud-group-services"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"C:\\\\xampp\\\\htdocs\\\\Trabajo Cloud-Group-Services\\\\cloud-group-services","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/","#USER"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\Mis trabajos\\\\CloudGroup\\\\cloud-group-services\\\\cloud-group-services","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 

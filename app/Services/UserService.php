@@ -12,11 +12,9 @@ use Illuminate\Support\Facades\DB;
 class UserService
 {
 
-    public $roleService;
-
     public function __construct()
     {
-        $this->roleService = new RoleService();
+
     }
 
 
@@ -176,22 +174,25 @@ class UserService
     {
         try {
             /*--------------- Search Role --------------------*/
-            $limit = property_exists($search, 'limit') ? $search->limit : 20;
+            $limit = property_exists($search, 'itemsPerPage') ? $search->itemsPerPage : 20;
             $page = property_exists($search, 'page') && $search->page > 0 ? $search->page : 1;
             $skip = ($page - 1) * $limit;
 
             $users = null;
-            if(property_exists($search, 'search'))
+            if(property_exists($search, 'search') && $search->search!='')
                 $users = User::where('name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->skip($skip)->take($limit)->get();
             else
                 $users = User::skip($skip)->take($limit)->get();
 
-            foreach ($users as $user)
-            {
-                $user['locations'] = $this->getLocations($user);
-            }
+            $total = null;
+            if(property_exists($search, 'search') && $search->search!='')
+                $total = count(User::where('name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->get());
+            else
+                $total = count(User::all());
 
-            return $users;
+            $paginate = array("total" => $total, "items" => $users);
+
+           return $paginate;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
