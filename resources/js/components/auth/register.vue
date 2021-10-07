@@ -13,7 +13,7 @@
     <form @submit.prevent="submit">
         <validation-provider
             v-slot="{ errors }"
-            name="First Name"
+            name="Nombre(s)"
             rules="required"
             :counter = 20
         >
@@ -22,14 +22,14 @@
                 clear-icon="mdi-close"
                 clearable
                 :error-messages="errors"
-                label="First Name"
+                label="Nombre(s)"
                 required
             ></v-text-field>
         </validation-provider>
 
         <validation-provider
             v-slot="{ errors }"
-            name="Last Name"
+            name="Apellido(s)"
             rules="required"
             :counter = 20
         >
@@ -38,14 +38,14 @@
                 clear-icon="mdi-close"
                 clearable
                 :error-messages="errors"
-                label="Last Name"
+                label="Apellido(s)"
                 required
             ></v-text-field>
         </validation-provider>
 
         <validation-provider
             v-slot="{ errors }"
-            name="Email"
+            name="Correo electrónico"
             rules="required|email"
         >
             <v-text-field
@@ -53,14 +53,44 @@
                 clear-icon="mdi-close"
                 clearable
                 :error-messages="errors"
-                label="Email"
+                label="Correo electrónico"
                 required
             ></v-text-field>
         </validation-provider>
 
         <validation-provider
             v-slot="{ errors }"
-            name="Password"
+            name="Dirección"
+            rules="required"
+        >
+            <v-text-field
+                v-model="address"
+                clear-icon="mdi-close"
+                clearable
+                :error-messages="errors"
+                label="Dirección"
+                required
+            ></v-text-field>
+        </validation-provider>
+
+        <validation-provider
+            v-slot="{ errors }"
+            name="Teléfono"
+            rules="required"
+        >
+            <v-text-field
+                v-model="phone_number"
+                clear-icon="mdi-close"
+                clearable
+                :error-messages="errors"
+                label="Teléfono"
+                required
+            ></v-text-field>
+        </validation-provider>
+
+        <validation-provider
+            v-slot="{ errors }"
+            name="Contraseña"
             rules="required"
         >
             <v-text-field
@@ -72,14 +102,14 @@
                 @click:append="showPassword = !showPassword"
                 :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                 :type="showPassword ? 'text' : 'password'"
-                label="Password"
+                label="Contraseña"
                 required
             ></v-text-field>
         </validation-provider>
 
         <validation-provider
             v-slot="{ errors }"
-            name="Repeat Password"
+            name="Repetir Contraseña"
             rules="required"
         >
             <v-text-field
@@ -92,7 +122,7 @@
                 @click:append="showRepeatPassword = !showRepeatPassword"
                 :append-icon="showRepeatPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                 :type="showRepeatPassword ? 'text' : 'password'"
-                label="Repeat Password"
+                label="Repetir Contraseña"
                 required
             ></v-text-field>
         </validation-provider>
@@ -163,6 +193,8 @@ export default {
         first_name: '',
         last_name: '',
         email: '',
+        address: '',
+        phone_number: '',
         password: '',
         passwordAgain: '',
         loading: false,
@@ -178,7 +210,7 @@ export default {
         submit () {
             this.$refs.observer.validate()
             this.loading = true
-            const data = {first_name :this.first_name, last_name :this.last_name, email:this.email, password: this.password}
+            const data = {first_name :this.first_name, last_name :this.last_name, email:this.email, address :this.address, phone_number :this.phone_number, password: this.password}
                 HTTP.post(`auth/register`, data)
                     .then(response => {
                         console.log(response.data.data.access_token)
@@ -204,6 +236,8 @@ export default {
             this.last_name = ''
             this.email = ''
             this.password = ''
+            this.address = ''
+            this.phone_number = ''
             this.$refs.observer.reset()
         },
     }

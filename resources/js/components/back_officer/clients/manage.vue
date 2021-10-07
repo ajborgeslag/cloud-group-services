@@ -42,11 +42,22 @@
                                             <v-col
                                             >
                                                 <v-text-field
-                                                    v-model="editedItem.name"
+                                                    v-model="editedItem.first_name"
                                                     label="Nombre"
                                                 ></v-text-field>
                                             </v-col>
                                         </v-row>
+
+                                        <v-row>
+                                            <v-col
+                                            >
+                                                <v-text-field
+                                                    v-model="editedItem.last_name"
+                                                    label="Apellido"
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
                                         <v-row>
                                             <v-col
                                             >
@@ -56,6 +67,27 @@
                                                 ></v-text-field>
                                             </v-col>
                                         </v-row>
+
+                                        <v-row>
+                                            <v-col
+                                            >
+                                                <v-text-field
+                                                    v-model="editedItem.address"
+                                                    label="Dirección"
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                            <v-col
+                                            >
+                                                <v-text-field
+                                                    v-model="editedItem.phone_number"
+                                                    label="Teléfono"
+                                                ></v-text-field>
+                                            </v-col>
+                                        </v-row>
+
                                     </v-container>
                                 </v-card-text>
 
@@ -79,9 +111,9 @@
                             </v-card>
                         </v-dialog>
 
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="dialogDelete" max-width="475px">
                     <v-card>
-                        <v-card-title class="text-h5">Está seguro que desea eliminar el cliente ?</v-card-title>
+                        <v-card-title class="text-h6 ">¿Está seguro que desea eliminar el cliente?</v-card-title>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
@@ -114,12 +146,7 @@
 </template>
 
 <script>
-/*export default {
-    name: "manage"
-}*/
-
 import {HTTP} from "../../../utils/http_commons";
-
 export default {
     data: () => ({
             totalElements: 0,
@@ -130,18 +157,27 @@ export default {
             dialogDelete: false,
             search: '',
             columns: [
-                {text: 'Nombre', value: 'name'},
+                {text: 'Nombre', value: 'first_name'},
+                {text: 'Apellidos', value: 'last_name'},
                 {text: 'Correo', value: 'email'},
+                {text: 'Teléfono', value: 'phone_number'},
+                {text: 'Dirección', value: 'address'},
                 {text: 'Acciones', value: 'actions', sortable: false}
             ],
             editedIndex: -1,
             editedItem: {
-                named: '',
+                first_name: '',
+                last_name: '',
                 email: '',
+                address: '',
+                phone_number: '',
             },
             defaultItem: {
-                name: '',
+                first_name: '',
+                last_name: '',
                 email: '',
+                address: '',
+                phone_number: '',
             },
     }),
 
@@ -170,10 +206,6 @@ export default {
             },
             deep: true,
         },
-    },
-
-    created () {
-        this.initialize()
     },
 
     methods: {
@@ -209,17 +241,16 @@ export default {
             this.dialogDelete = true
         },
         deleteItemConfirm () {
-            // this.elements.splice(this.editedIndex, 1)
-            // this.closeDelete()
-
-            if (this.editedIndex > -1) {
-                Object.assign(this.elements[this.editedIndex], this.editedItem)
-            } else {
-                // this.elements.push(this.editedItem)
-                this.elements.splice(this.editedIndex, 1)
-            }
-            // this.close()
-            this.closeDelete()
+            const data = {id:this.editedItem.id}
+            HTTP.delete(`user/remove`, {data})
+                .then(response => {
+                    this.getDataFromApi()
+                    this.elements.splice(this.editedIndex, 1)
+                    this.closeDelete()
+                })
+                .catch(e => {
+                    this.loading = false
+                })
         },
         close () {
             this.dialog = false
@@ -227,6 +258,7 @@ export default {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
             })
+            this.loading = false
         },
         closeDelete () {
             this.dialogDelete = false
@@ -234,10 +266,24 @@ export default {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
             })
+            this.loading = false
         },
         save () {
             if (this.editedIndex > -1) {
+                this.loading = true
                 Object.assign(this.elements[this.editedIndex], this.editedItem)
+                const data = {
+                    id:this.editedItem.id,
+                    first_name:this.editedItem.first_name,
+                    last_name:this.editedItem.last_name,
+                    email:this.editedItem.email,
+                    address:this.editedItem.address,
+                    phone_number:this.editedItem.phone_number
+                }
+                HTTP.post('user/update', data)
+                .then(response =>{
+                    this.getDataFromApi()
+                })
             } else {
                 this.elements.push(this.editedItem)
             }

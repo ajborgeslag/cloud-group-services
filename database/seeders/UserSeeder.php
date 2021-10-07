@@ -18,9 +18,12 @@ class UserSeeder extends Seeder
             'first_name' => 'Admin',
             'last_name' => 'General',
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('123456789'),
+            'address' => 'Edificio 891 apto. 25 Zona 5 Alamar, Habana del Este, La Habana, Cuba',
+            'phone_number' => '+53 54601260',
+            'password' => bcrypt('123456789')
         ]);
         $user->assignRole('admin');
         $user->assignPermision('todos');
+
     }
 }

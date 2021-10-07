@@ -6,8 +6,7 @@ namespace App\Http\Request\user;
 
 use App\Http\Request\FormRequest;
 
-
-class UserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +30,6 @@ class UserRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email|unique:user,email',
-            'password' => 'required',
             'address' => 'required',
             'phone_number' => 'required',
         ];

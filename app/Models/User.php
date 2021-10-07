@@ -16,6 +16,13 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable, HasRoles;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
@@ -25,6 +32,8 @@ class User extends Authenticatable implements JWTSubject
         'last_name',
         'email',
         'password',
+        'address',
+        'phone_number',
     ];
 
     /**

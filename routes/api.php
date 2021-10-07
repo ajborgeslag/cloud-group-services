@@ -31,6 +31,8 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
+
 /** Users */
 Route::post('/user/search',[UserController::class, 'search']);
-Route::get('/manage/{user}', [UserController::class, 'show']);
+Route::delete('/user/remove',[UserController::class, 'remove']);
+Route::post('/user/update',[UserController::class, 'update']);
