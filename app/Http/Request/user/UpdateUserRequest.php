@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'id' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:user,email',
+            'email' => 'required|email',
             'address' => 'required',
             'phone_number' => 'required',
         ];
