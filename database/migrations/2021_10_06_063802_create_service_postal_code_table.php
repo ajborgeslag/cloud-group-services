@@ -20,6 +20,7 @@ class CreateServicePostalCodeTable extends Migration
             $table->unsignedBigInteger('postal_code_id');
             $table->foreign('service_id')->references('id')->on('services');
             $table->foreign('postal_code_id')->references('id')->on('postal_code');
+            $table->double('pluss_price',8, 2);
             $table->timestamps();
         });
         Schema::disableForeignKeyConstraints();

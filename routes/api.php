@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,6 @@ Route::group([
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
 /** Users */
+Route::post('/service/search-zip-code',[ServiceController::class, 'searchZipCode']);
 Route::post('/user/search',[UserController::class, 'search']);
 Route::get('/manage/{user}', [UserController::class, 'show']);
