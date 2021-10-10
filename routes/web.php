@@ -33,3 +33,7 @@ Route::get('/home/{vue_capture?}', function () {
 Route::get('/manage/{vue_capture?}', function () {
     return view('back_officer/clients/manage');
 })->where('vue_capture', '[\/\w\.-]*');
+
+Route::get('/zip_code/{vue_capture?}', function () {
+    return view('back_officer/services/zip_code');
+})->where('vue_capture', '[\/\w\.-]*');
