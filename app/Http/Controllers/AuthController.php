@@ -69,7 +69,11 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'success' => false,
+                'data' => $validator->errors(),
+                'message' => trans('messages.invalid_field_validation')
+            ], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $user = User::create(array_merge(

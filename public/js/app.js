@@ -2779,6 +2779,92 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 (0,vee_validate__WEBPACK_IMPORTED_MODULE_0__.setInteractionMode)('eager');
@@ -2797,11 +2883,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       totalElements: 0,
+      showMagnifyingGlass: true,
       showRepeatPassword: false,
       showPassword: false,
-      passwordAgain: '',
-      password: '',
       elements: [],
+      error_message: '',
       loading: true,
       options: {},
       dialog: false,
@@ -2849,9 +2935,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       },
       minimumChar: function minimumChar(v) {
         return v.length >= 8 || 'Min 8 characters';
-      },
-      passwordRequired: function passwordRequired(v) {
-        return !!v || 'Password is required';
       }
     };
   },
@@ -2877,6 +2960,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       deep: true
     },
     search: {
+      showMagnifyingGlass: false,
       handler: function handler() {
         this.getDataFromApi();
       },
@@ -2997,6 +3081,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveNewClient: function saveNewClient() {
       var _this7 = this;
 
+      this.$refs.observer.validate();
       this.loading = true;
       var data = {
         first_name: this.editedItem.first_name,
@@ -42943,177 +43028,298 @@ var render = function() {
                             _c(
                               "v-container",
                               [
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Nombre(s)" },
-                                          model: {
-                                            value: _vm.editedItem.first_name,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "first_name",
-                                                $$v
-                                              )
+                                _c("validation-observer", {
+                                  ref: "observer",
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "default",
+                                      fn: function(ref) {
+                                        var invalid = ref.invalid
+                                        return [
+                                          _c(
+                                            "form",
+                                            {
+                                              on: {
+                                                submit: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.save.apply(
+                                                    null,
+                                                    arguments
+                                                  )
+                                                }
+                                              }
                                             },
-                                            expression: "editedItem.first_name"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Apellido(s)" },
-                                          model: {
-                                            value: _vm.editedItem.last_name,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "last_name",
-                                                $$v
+                                            [
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Nombre(s)",
+                                                  rules: "required",
+                                                  counter: 20
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label:
+                                                                "Nombre(s)",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .first_name,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "first_name",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.first_name"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Apellido(s)",
+                                                  rules: "required",
+                                                  counter: 20
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label:
+                                                                "Apellido(s)",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .last_name,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "last_name",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.last_name"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Correo electrónico",
+                                                  rules: "required|email"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label: "Correo",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .email,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "email",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.email"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Dirección",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              label:
+                                                                "Dirección",
+                                                              "error-messages": errors,
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .address,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "address",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.address"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Teléfono",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              label: "Teléfono",
+                                                              "error-messages": errors,
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .phone_number,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "phone_number",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.phone_number"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-spacer"),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-btn",
+                                                {
+                                                  attrs: {
+                                                    color: "blue darken-1",
+                                                    text: ""
+                                                  },
+                                                  on: { click: _vm.close }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                                Cancelar\n                                            "
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-btn",
+                                                {
+                                                  attrs: {
+                                                    color: "blue darken-1",
+                                                    text: "",
+                                                    type: "submit",
+                                                    disabled: invalid,
+                                                    loading: _vm.loading
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                                Salvar\n                                            "
+                                                  )
+                                                ]
                                               )
-                                            },
-                                            expression: "editedItem.last_name"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Correo" },
-                                          model: {
-                                            value: _vm.editedItem.email,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "email",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.email"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Dirección" },
-                                          model: {
-                                            value: _vm.editedItem.address,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "address",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.address"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-row",
-                                  [
-                                    _c(
-                                      "v-col",
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Teléfono" },
-                                          model: {
-                                            value: _vm.editedItem.phone_number,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "phone_number",
-                                                $$v
-                                              )
-                                            },
-                                            expression:
-                                              "editedItem.phone_number"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                )
+                                            ],
+                                            1
+                                          )
+                                        ]
+                                      }
+                                    }
+                                  ])
+                                })
                               ],
                               1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-card-actions",
-                          [
-                            _c("v-spacer"),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.close }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                    Cancelar\n                                "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.save }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                    Salvar\n                                "
-                                )
-                              ]
                             )
                           ],
                           1
@@ -43204,197 +43410,440 @@ var render = function() {
                         _c(
                           "v-card-text",
                           [
-                            _c("v-container", [
-                              _c(
-                                "form",
-                                {
-                                  on: {
-                                    submit: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.saveNewClient.apply(
-                                        null,
-                                        arguments
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("v-text-field", {
-                                    attrs: { label: "Nombre(s)" },
-                                    model: {
-                                      value: _vm.editedItem.first_name,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.editedItem,
-                                          "first_name",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "editedItem.first_name"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: { label: "Apellido(s)" },
-                                    model: {
-                                      value: _vm.editedItem.last_name,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.editedItem,
-                                          "last_name",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "editedItem.last_name"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: { label: "Correo" },
-                                    model: {
-                                      value: _vm.editedItem.email,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.editedItem, "email", $$v)
-                                      },
-                                      expression: "editedItem.email"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: { label: "Dirección" },
-                                    model: {
-                                      value: _vm.editedItem.address,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.editedItem, "address", $$v)
-                                      },
-                                      expression: "editedItem.address"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: { label: "Teléfono" },
-                                    model: {
-                                      value: _vm.editedItem.phone_number,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.editedItem,
-                                          "phone_number",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "editedItem.phone_number"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      "clear-icon": "mdi-close",
-                                      clearable: "",
-                                      "error-messages": _vm.errors,
-                                      rules: [
-                                        function(v) {
-                                          return !!v || _vm.passwordRequired
-                                        } && _vm.minimumChar
-                                      ],
-                                      "append-icon": _vm.showPassword
-                                        ? "mdi-eye-outline"
-                                        : "mdi-eye-off-outline",
-                                      type: _vm.showPassword
-                                        ? "text"
-                                        : "password",
-                                      label: "Contraseña",
-                                      required: ""
-                                    },
-                                    on: {
-                                      "click:append": function($event) {
-                                        _vm.showPassword = !_vm.showPassword
-                                      }
-                                    },
-                                    model: {
-                                      value: _vm.editedItem.password,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.editedItem,
-                                          "password",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "editedItem.password"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      "clear-icon": "mdi-close",
-                                      clearable: "",
-                                      "error-messages": _vm.errors,
-                                      rules: [
-                                        _vm.password === _vm.passwordAgain ||
-                                          "Password must match"
-                                      ],
-                                      "append-icon": _vm.showRepeatPassword
-                                        ? "mdi-eye-outline"
-                                        : "mdi-eye-off-outline",
-                                      type: _vm.showRepeatPassword
-                                        ? "text"
-                                        : "password",
-                                      label: "Repetir Contraseña"
-                                    },
-                                    on: {
-                                      "click:clear": _vm.clearMessage,
-                                      "click:append": function($event) {
-                                        _vm.showRepeatPassword = !_vm.showRepeatPassword
-                                      }
-                                    },
-                                    model: {
-                                      value: _vm.editedItem.passwordAgain,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.editedItem,
-                                          "passwordAgain",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "editedItem.passwordAgain"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ])
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-card-actions",
-                          [
-                            _c("v-spacer"),
-                            _vm._v(" "),
                             _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.close }
-                              },
+                              "v-container",
                               [
-                                _vm._v(
-                                  "\n                                Cancelar\n                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                attrs: { color: "blue darken-1", text: "" },
-                                on: { click: _vm.saveNewClient }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                Salvar\n                            "
-                                )
-                              ]
+                                _c("validation-observer", {
+                                  ref: "observer",
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "default",
+                                      fn: function(ref) {
+                                        var invalid = ref.invalid
+                                        return [
+                                          _c(
+                                            "form",
+                                            {
+                                              on: {
+                                                submit: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.saveNewClient.apply(
+                                                    null,
+                                                    arguments
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Nombre(s)",
+                                                  rules: "required",
+                                                  counter: 20
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label:
+                                                                "Nombre(s)",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .first_name,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "first_name",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.first_name"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Apellido(s)",
+                                                  rules: "required",
+                                                  counter: 20
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label:
+                                                                "Apellido(s)",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .last_name,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "last_name",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.last_name"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Correo electrónico",
+                                                  rules: "required|email"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages": errors,
+                                                              label: "Correo",
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .email,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "email",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.email"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Dirección",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              label:
+                                                                "Dirección",
+                                                              "error-messages": errors,
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .address,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "address",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.address"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Teléfono",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              label: "Teléfono",
+                                                              "error-messages": errors,
+                                                              required: ""
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .phone_number,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "phone_number",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.phone_number"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Contraseña",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "clear-icon":
+                                                                "mdi-close",
+                                                              clearable: "",
+                                                              "error-messages": errors,
+                                                              rules: [
+                                                                function(v) {
+                                                                  return (
+                                                                    !!v ||
+                                                                    "Password is required"
+                                                                  )
+                                                                } &&
+                                                                  _vm.minimumChar
+                                                              ],
+                                                              "append-icon": _vm.showPassword
+                                                                ? "mdi-eye-outline"
+                                                                : "mdi-eye-off-outline",
+                                                              type: _vm.showPassword
+                                                                ? "text"
+                                                                : "password",
+                                                              label:
+                                                                "Contraseña",
+                                                              required: ""
+                                                            },
+                                                            on: {
+                                                              "click:append": function(
+                                                                $event
+                                                              ) {
+                                                                _vm.showPassword = !_vm.showPassword
+                                                              }
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .password,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "password",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.password"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("validation-provider", {
+                                                attrs: {
+                                                  name: "Repetir Contraseña",
+                                                  rules: "required"
+                                                },
+                                                scopedSlots: _vm._u(
+                                                  [
+                                                    {
+                                                      key: "default",
+                                                      fn: function(ref) {
+                                                        var errors = ref.errors
+                                                        return [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "clear-icon":
+                                                                "mdi-close",
+                                                              clearable: "",
+                                                              "error-messages": errors,
+                                                              rules: [
+                                                                _vm.editedItem
+                                                                  .password ===
+                                                                  _vm.editedItem
+                                                                    .passwordAgain ||
+                                                                  "Password must match"
+                                                              ],
+                                                              "append-icon": _vm.showRepeatPassword
+                                                                ? "mdi-eye-outline"
+                                                                : "mdi-eye-off-outline",
+                                                              type: _vm.showRepeatPassword
+                                                                ? "text"
+                                                                : "password",
+                                                              label:
+                                                                "Repetir Contraseña"
+                                                            },
+                                                            on: {
+                                                              "click:clear":
+                                                                _vm.clearMessage,
+                                                              "click:append": function(
+                                                                $event
+                                                              ) {
+                                                                _vm.showRepeatPassword = !_vm.showRepeatPassword
+                                                              }
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .passwordAgain,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "passwordAgain",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.passwordAgain"
+                                                            }
+                                                          })
+                                                        ]
+                                                      }
+                                                    }
+                                                  ],
+                                                  null,
+                                                  true
+                                                )
+                                              }),
+                                              _vm._v(" "),
+                                              _c("v-spacer"),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-btn",
+                                                {
+                                                  attrs: {
+                                                    color: "blue darken-1",
+                                                    text: ""
+                                                  },
+                                                  on: { click: _vm.close }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                        Cancelar\n                                    "
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-btn",
+                                                {
+                                                  attrs: {
+                                                    color: "blue darken-1",
+                                                    text: "",
+                                                    type: "submit",
+                                                    disabled: invalid,
+                                                    loading: _vm.loading
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                        Salvar\n                                    "
+                                                  )
+                                                ]
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ]
+                                      }
+                                    }
+                                  ])
+                                })
+                              ],
+                              1
                             )
                           ],
                           1

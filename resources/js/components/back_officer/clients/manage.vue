@@ -20,7 +20,7 @@
 
                 <v-text-field
                     v-model="search"
-                    append-icon="mdi-magnify"
+                    append-icon=mdi-magnify
                     label="Buscar"
                     single-line
                     hide-details
@@ -48,76 +48,102 @@
 
                                 <v-card-text>
                                     <v-container>
-                                        <v-row>
-                                            <v-col
-                                            >
-                                                <v-text-field
-                                                    v-model="editedItem.first_name"
-                                                    label="Nombre(s)"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                        <validation-observer
+                                            ref="observer"
+                                            v-slot="{ invalid }"
+                                        >
+                                            <form @submit.prevent="save">
 
-                                        <v-row>
-                                            <v-col
-                                            >
-                                                <v-text-field
-                                                    v-model="editedItem.last_name"
-                                                    label="Apellido(s)"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                                <validation-provider
+                                                    v-slot="{ errors }"
+                                                    name="Nombre(s)"
+                                                    rules="required"
+                                                    :counter = 20
+                                                >
+                                                    <v-text-field
+                                                        v-model="editedItem.first_name"
+                                                        :error-messages="errors"
+                                                        label="Nombre(s)"
+                                                        required
+                                                    ></v-text-field>
+                                                </validation-provider>
 
-                                        <v-row>
-                                            <v-col
-                                            >
-                                                <v-text-field
-                                                    v-model="editedItem.email"
-                                                    label="Correo"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                                <validation-provider
+                                                    v-slot="{ errors }"
+                                                    name="Apellido(s)"
+                                                    rules="required"
+                                                    :counter = 20
+                                                >
+                                                    <v-text-field
+                                                        v-model="editedItem.last_name"
+                                                        :error-messages="errors"
+                                                        label="Apellido(s)"
+                                                        required
+                                                    ></v-text-field>
+                                                </validation-provider>
 
-                                        <v-row>
-                                            <v-col
-                                            >
-                                                <v-text-field
-                                                    v-model="editedItem.address"
-                                                    label="Dirección"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                                <validation-provider
+                                                    v-slot="{ errors }"
+                                                    name="Correo electrónico"
+                                                    rules="required|email"
+                                                >
+                                                    <v-text-field
+                                                        v-model="editedItem.email"
+                                                        :error-messages="errors"
+                                                        label="Correo"
+                                                        required
+                                                    ></v-text-field>
+                                                </validation-provider>
 
-                                        <v-row>
-                                            <v-col
-                                            >
-                                                <v-text-field
-                                                    v-model="editedItem.phone_number"
-                                                    label="Teléfono"
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                                <validation-provider
+                                                    v-slot="{ errors }"
+                                                    name="Dirección"
+                                                    rules="required"
+                                                >
+                                                    <v-text-field
+                                                        v-model="editedItem.address"
+                                                        label="Dirección"
+                                                        :error-messages="errors"
+                                                        required
+                                                    ></v-text-field>
+                                                </validation-provider>
 
+                                                <validation-provider
+                                                    v-slot="{ errors }"
+                                                    name="Teléfono"
+                                                    rules="required"
+                                                >
+                                                    <v-text-field
+                                                        v-model="editedItem.phone_number"
+                                                        label="Teléfono"
+                                                        :error-messages="errors"
+                                                        required
+                                                    ></v-text-field>
+                                                </validation-provider>
+
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                    color="blue darken-1"
+                                                    text
+                                                    @click="close"
+                                                >
+                                                    Cancelar
+                                                </v-btn>
+                                                <v-btn
+                                                    color="blue darken-1"
+                                                    text
+                                                    type = "submit"
+                                                    :disabled="invalid"
+                                                    :loading="loading"
+
+                                                >
+                                                    Salvar
+                                                </v-btn>
+                                            </form>
+                                        </validation-observer>
                                     </v-container>
                                 </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="close"
-                                    >
-                                        Cancelar
-                                    </v-btn>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="save"
-                                    >
-                                        Salvar
-                                    </v-btn>
-                                </v-card-actions>
                             </v-card>
                         </v-dialog>
 
@@ -143,78 +169,138 @@
 
                             <v-card-text>
                                 <v-container>
+                                    <validation-observer
+                                    ref="observer"
+                                    v-slot="{ invalid }"
+                                >
                                     <form @submit.prevent="saveNewClient">
+
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Nombre(s)"
+                                            rules="required"
+                                            :counter = 20
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.first_name"
+                                                :error-messages="errors"
                                                 label="Nombre(s)"
+                                                required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Apellido(s)"
+                                            rules="required"
+                                            :counter = 20
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.last_name"
+                                                :error-messages="errors"
                                                 label="Apellido(s)"
+                                                required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Correo electrónico"
+                                            rules="required|email"
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.email"
+                                                :error-messages="errors"
                                                 label="Correo"
+                                                required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Dirección"
+                                            rules="required"
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.address"
                                                 label="Dirección"
+                                                :error-messages="errors"
+                                                required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Teléfono"
+                                            rules="required"
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.phone_number"
                                                 label="Teléfono"
+                                                :error-messages="errors"
+                                                required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Contraseña"
+                                            rules="required"
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.password"
                                                 clear-icon="mdi-close"
                                                 clearable
                                                 :error-messages="errors"
-                                                :rules="[(v => !!v || passwordRequired) && minimumChar]"
+                                                :rules="[(v => !!v || 'Password is required') && minimumChar]"
                                                 @click:append="showPassword = !showPassword"
                                                 :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                                                 :type="showPassword ? 'text' : 'password'"
                                                 label="Contraseña"
                                                 required
                                             ></v-text-field>
+                                        </validation-provider>
 
+                                        <validation-provider
+                                            v-slot="{ errors }"
+                                            name="Repetir Contraseña"
+                                            rules="required"
+                                        >
                                             <v-text-field
                                                 v-model="editedItem.passwordAgain"
                                                 clear-icon="mdi-close"
                                                 clearable
                                                 @click:clear="clearMessage"
                                                 :error-messages="errors"
-                                                :rules="[(password === passwordAgain) || 'Password must match']"
+                                                :rules="[(editedItem.password === editedItem.passwordAgain) || 'Password must match']"
                                                 @click:append="showRepeatPassword = !showRepeatPassword"
                                                 :append-icon="showRepeatPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                                                 :type="showRepeatPassword ? 'text' : 'password'"
                                                 label="Repetir Contraseña"
                                             ></v-text-field>
+                                        </validation-provider>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            @click="close"
+                                        >
+                                            Cancelar
+                                        </v-btn>
+                                        <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            type = "submit"
+                                            :disabled="invalid"
+                                            :loading="loading"
+
+                                        >
+                                            Salvar
+                                        </v-btn>
                                     </form>
+                                    </validation-observer>
                                 </v-container>
                             </v-card-text>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    color="blue darken-1"
-                                    text
-                                    @click="close"
-                                >
-                                    Cancelar
-                                </v-btn>
-                                <v-btn
-                                    color="blue darken-1"
-                                    text
-                                    @click="saveNewClient"
-                                >
-                                    Salvar
-                                </v-btn>
-                            </v-card-actions>
                         </v-card>
                     </v-dialog>
                 </template>
@@ -266,11 +352,11 @@ export default {
     },
     data: () => ({
             totalElements: 0,
+            showMagnifyingGlass: true,
             showRepeatPassword:false,
             showPassword:false,
-            passwordAgain: '',
-            password: '',
             elements: [],
+            error_message: '',
             loading: true,
             options: {},
             dialog: false,
@@ -305,7 +391,6 @@ export default {
                 password: '',
             },
             minimumChar: v => v.length >= 8 || 'Min 8 characters',
-            passwordRequired: v => !!v || 'Password is required',
     }),
 
     computed: {
@@ -331,6 +416,7 @@ export default {
             deep: true,
         },
         search: {
+            showMagnifyingGlass: false,
             handler () {
                 this.getDataFromApi()
             },
@@ -424,6 +510,7 @@ export default {
             this.close()
         },
         saveNewClient(){
+                this.$refs.observer.validate()
                 this.loading = true
                 const data = {
                     first_name:this.editedItem.first_name,
