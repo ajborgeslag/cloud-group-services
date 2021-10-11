@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Request\user\DeleteUserRequest;
+use App\Http\Request\user\AddNewUserRequest;
 use App\Http\Request\user\UpdateUserRequest;
 use App\Http\Request\user\UserRequest;
 use App\Models\User;
@@ -60,5 +61,4 @@ class UserController extends Controller
             return response(["success"=>false, "message" => $e->getMessage()/*trans('messages.internal_server_error')*/], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }

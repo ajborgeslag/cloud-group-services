@@ -8,6 +8,16 @@
 
             <v-spacer></v-spacer>
 
+                 <v-icon
+                    size=25
+                    class="mr-2"
+                    @click="addNewClient"
+                    >
+                   mdi-account-plus
+                </v-icon>
+
+            <v-spacer></v-spacer>
+
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
@@ -43,7 +53,7 @@
                                             >
                                                 <v-text-field
                                                     v-model="editedItem.first_name"
-                                                    label="Nombre"
+                                                    label="Nombre(s)"
                                                 ></v-text-field>
                                             </v-col>
                                         </v-row>
@@ -53,7 +63,7 @@
                                             >
                                                 <v-text-field
                                                     v-model="editedItem.last_name"
-                                                    label="Apellido"
+                                                    label="Apellido(s)"
                                                 ></v-text-field>
                                             </v-col>
                                         </v-row>
@@ -122,7 +132,93 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+
+                <v-dialog v-model="dialogAddClient"
+                          max-width="500px"
+                >
+                        <v-card>
+                            <v-card-title>
+                                <span class="text-h5">{{ formTitle }}</span>
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container>
+                                    <form @submit.prevent="saveNewClient">
+                                            <v-text-field
+                                                v-model="editedItem.first_name"
+                                                label="Nombre(s)"
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.last_name"
+                                                label="Apellido(s)"
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.email"
+                                                label="Correo"
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.address"
+                                                label="Dirección"
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.phone_number"
+                                                label="Teléfono"
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.password"
+                                                clear-icon="mdi-close"
+                                                clearable
+                                                :error-messages="errors"
+                                                :rules="[(v => !!v || passwordRequired) && minimumChar]"
+                                                @click:append="showPassword = !showPassword"
+                                                :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                :type="showPassword ? 'text' : 'password'"
+                                                label="Contraseña"
+                                                required
+                                            ></v-text-field>
+
+                                            <v-text-field
+                                                v-model="editedItem.passwordAgain"
+                                                clear-icon="mdi-close"
+                                                clearable
+                                                @click:clear="clearMessage"
+                                                :error-messages="errors"
+                                                :rules="[(password === passwordAgain) || 'Password must match']"
+                                                @click:append="showRepeatPassword = !showRepeatPassword"
+                                                :append-icon="showRepeatPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                :type="showRepeatPassword ? 'text' : 'password'"
+                                                label="Repetir Contraseña"
+                                            ></v-text-field>
+                                    </form>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="close"
+                                >
+                                    Cancelar
+                                </v-btn>
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="saveNewClient"
+                                >
+                                    Salvar
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </template>
+
                 <template v-slot:item.actions="{ item }">
                     <v-icon
                         small
@@ -146,15 +242,40 @@
 </template>
 
 <script>
+
+import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
+setInteractionMode('eager')
+
+extend('required', {
+    ...required,
+    message: '{_field_} requerido',
+})
+
+extend('email', {
+    ...email,
+    message: 'Email inválido',
+})
+
 import {HTTP} from "../../../utils/http_commons";
 export default {
+    components: {
+        ValidationProvider,
+        ValidationObserver,
+    },
     data: () => ({
             totalElements: 0,
+            showRepeatPassword:false,
+            showPassword:false,
+            passwordAgain: '',
+            password: '',
             elements: [],
             loading: true,
             options: {},
             dialog: false,
             dialogDelete: false,
+            dialogAddClient: false,
             search: '',
             columns: [
                 {text: 'Nombre', value: 'first_name'},
@@ -171,6 +292,8 @@ export default {
                 email: '',
                 address: '',
                 phone_number: '',
+                passwordAgain: '',
+                password: '',
             },
             defaultItem: {
                 first_name: '',
@@ -178,13 +301,17 @@ export default {
                 email: '',
                 address: '',
                 phone_number: '',
+                passwordAgain: '',
+                password: '',
             },
+            minimumChar: v => v.length >= 8 || 'Min 8 characters',
+            passwordRequired: v => !!v || 'Password is required',
     }),
 
     computed: {
         formTitle () {
-            //return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            return 'Editar Cliente'
+            return this.editedIndex === -1 ? 'Agregar Nuevo Cliente' : 'Editar Datos del Cliente'
+
         },
     },
     watch: {
@@ -193,6 +320,9 @@ export default {
         },
         dialogDelete (val) {
             val || this.closeDelete()
+        },
+        dialogAddClient (val) {
+            val || this.close()
         },
         options: {
             handler () {
@@ -235,6 +365,11 @@ export default {
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
+        addNewClient (item) {
+            this.editedIndex = this.elements.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialogAddClient = true
+        },
         deleteItem (item) {
             this.editedIndex = this.elements.indexOf(item)
             this.editedItem = Object.assign({}, item)
@@ -254,6 +389,7 @@ export default {
         },
         close () {
             this.dialog = false
+            this.dialogAddClient = false
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
@@ -284,11 +420,33 @@ export default {
                 .then(response =>{
                     this.getDataFromApi()
                 })
-            } else {
-                this.elements.push(this.editedItem)
             }
             this.close()
         },
+        saveNewClient(){
+                this.loading = true
+                const data = {
+                    first_name:this.editedItem.first_name,
+                    last_name:this.editedItem.last_name,
+                    email:this.editedItem.email,
+                    address:this.editedItem.address,
+                    phone_number:this.editedItem.phone_number,
+                    password:this.editedItem.password
+                }
+                HTTP.post('auth/register', data)
+                    .then(response =>{
+                        this.getDataFromApi()
+                        console.log(response.data.data.access_token)
+                        localStorage.setItem('access_token', JSON.stringify(response.data.data.access_token));
+                        localStorage.setItem('authenticatedUser', true);
+                        Object.assign(this.elements[this.editedIndex], this.editedItem)
+                        this.loading = false;
+                    })
+            this.close()
+        },
+        clearMessage () {
+            this.message = ''
+        }
     },
 }
 </script>

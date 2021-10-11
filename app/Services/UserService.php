@@ -32,17 +32,17 @@ class UserService
         }
     }
 
-    public function update($userNew)
+    public function update($userEdit)
     {
         try {
-            /*--------------- Insert User --------------------*/
-            $userId = $userNew->id;
+            /*--------------- Edit User --------------------*/
+            $userId = $userEdit->id;
             $user = User::findOrFail($userId);
-            $user->first_name = $userNew->first_name;
-            $user->last_name = $userNew->last_name;
-            $user->email = $userNew->email;
-            $user->address = $userNew->address;
-            $user->phone_number = $userNew->phone_number;
+            $user->first_name = $userEdit->first_name;
+            $user->last_name = $userEdit->last_name;
+            $user->email = $userEdit->email;
+            $user->address = $userEdit->address;
+            $user->phone_number = $userEdit->phone_number;
             $user->save();
 
             return $user;
