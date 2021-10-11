@@ -3,11 +3,8 @@
 
 namespace App\Services;
 
-use App\Models\ReUserLocationRole;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class UserService
 {
@@ -18,11 +15,65 @@ class UserService
     }
 
 
-    public function getUser($userId)
+    public function delete($userDeleted): array
     {
         try {
-            /*--------------- Get User --------------------*/
-            return $user = User::where('id',$userId)->where('active',1)->firstOrFail();
+            /*--------------- Delete User --------------------*/
+            $userId = $userDeleted->id;
+            $user = User::findOrFail($userId);
+            $user->delete();
+
+            $userEliminated = array("userId" => $userId);
+
+            return $userEliminated;
+
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function update($userNew)
+    {
+        try {
+            /*--------------- Insert User --------------------*/
+            $userId = $userNew->id;
+            $user = User::findOrFail($userId);
+            $user->first_name = $userNew->first_name;
+            $user->last_name = $userNew->last_name;
+            $user->email = $userNew->email;
+            $user->address = $userNew->address;
+            $user->phone_number = $userNew->phone_number;
+            $user->save();
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function searchUser($search)
+    {
+        try {
+            /*--------------- Search Role --------------------*/
+            $limit = property_exists($search, 'itemsPerPage') ? $search->itemsPerPage : 20;
+            $page = property_exists($search, 'page') && $search->page > 0 ? $search->page : 1;
+            $skip = ($page - 1) * $limit;
+
+            $users = null;
+            if(property_exists($search, 'search') && $search->search!='')
+                $users = User::where('first_name', 'LIKE', '%' . $search->search . '%')->orWhere('last_name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->skip($skip)->take($limit)->get();
+            else
+                $users = User::skip($skip)->take($limit)->get();
+
+            $total = null;
+            if(property_exists($search, 'search') && $search->search!='')
+                $total = count(User::where('first_name', 'LIKE', '%' . $search->search . '%')->orWhere('last_name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->get());
+            else
+                $total = count(User::all());
+
+            $paginate = array("total" => $total, "items" => $users);
+
+            return $paginate;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -107,95 +158,5 @@ class UserService
         }
     }
 
-    public function update($userId, $userNew)
-    {
-        try {
-            /*--------------- Insert User --------------------*/
-            $user = User::findOrFail($userId);
-            $user->name = $userNew->name;
-            $user->email = $userNew->email;
-            $user->save();
-
-            return $user;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    public function updateFull($userNew)
-    {
-        try {
-            /*--------------- Insert User --------------------*/
-            $user = User::findOrFail($userNew->id);
-            $user->name = $userNew->name;
-            $user->email = $userNew->email;
-            $user->password = bcrypt($userNew->password);
-            $user->save();
-
-            /*-----------Delete and create new localtions and roles--------------------*/
-            ReUserLocationRole::where('user_id', $userNew->id)->delete();
-            $this->storeLocationsRoles($user, $userNew->locations);
-
-            return $user;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    public function activate($userNew)
-    {
-        try {
-            /*--------------- update User --------------------*/
-            $user = User::findOrFail($userNew->id);
-            $user->active = $userNew->active;
-            $user->save();
-
-            return $user;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    public function delete($userNew)
-    {
-        try {
-            /*--------------- Delete User --------------------*/
-            $userId = $userNew->id;
-            $user = User::findOrFail($userNew->id);
-            $user->delete();
-
-            return $userId;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    public function searchUser($search)
-    {
-        try {
-            /*--------------- Search Role --------------------*/
-            $limit = property_exists($search, 'itemsPerPage') ? $search->itemsPerPage : 20;
-            $page = property_exists($search, 'page') && $search->page > 0 ? $search->page : 1;
-            $skip = ($page - 1) * $limit;
-
-            $users = null;
-            if(property_exists($search, 'search') && $search->search!='')
-                $users = User::where('name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->skip($skip)->take($limit)->get();
-            else
-                $users = User::skip($skip)->take($limit)->get();
-
-            $total = null;
-            if(property_exists($search, 'search') && $search->search!='')
-                $total = count(User::where('name', 'LIKE', '%' . $search->search . '%')->orWhere('email', 'LIKE', '%' . $search->search . '%')->get());
-            else
-                $total = count(User::all());
-
-            $paginate = array("total" => $total, "items" => $users);
-
-           return $paginate;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
 
 }

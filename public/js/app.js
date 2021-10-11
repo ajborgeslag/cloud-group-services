@@ -2408,6 +2408,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 (0,vee_validate__WEBPACK_IMPORTED_MODULE_0__.setInteractionMode)('eager');
@@ -2428,6 +2458,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       first_name: '',
       last_name: '',
       email: '',
+      address: '',
+      phone_number: '',
       password: '',
       passwordAgain: '',
       loading: false,
@@ -2450,6 +2482,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         first_name: this.first_name,
         last_name: this.last_name,
         email: this.email,
+        address: this.address,
+        phone_number: this.phone_number,
         password: this.password
       };
       _utils_http_commons__WEBPACK_IMPORTED_MODULE_2__.HTTP.post("auth/register", data).then(function (response) {
@@ -2474,6 +2508,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.last_name = '';
     this.email = '';
     this.password = '';
+    this.address = '';
+    this.phone_number = '';
     this.$refs.observer.reset();
   }
 });
@@ -2607,10 +2643,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-/*export default {
-    name: "manage"
-}*/
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2624,10 +2688,19 @@ __webpack_require__.r(__webpack_exports__);
       search: '',
       columns: [{
         text: 'Nombre',
-        value: 'name'
+        value: 'first_name'
+      }, {
+        text: 'Apellidos',
+        value: 'last_name'
       }, {
         text: 'Correo',
         value: 'email'
+      }, {
+        text: 'Teléfono',
+        value: 'phone_number'
+      }, {
+        text: 'Dirección',
+        value: 'address'
       }, {
         text: 'Acciones',
         value: 'actions',
@@ -2635,12 +2708,18 @@ __webpack_require__.r(__webpack_exports__);
       }],
       editedIndex: -1,
       editedItem: {
-        named: '',
-        email: ''
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: '',
+        phone_number: ''
       },
       defaultItem: {
-        name: '',
-        email: ''
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: '',
+        phone_number: ''
       }
     };
   },
@@ -2669,9 +2748,6 @@ __webpack_require__.r(__webpack_exports__);
       },
       deep: true
     }
-  },
-  created: function created() {
-    this.initialize();
   },
   methods: {
     getDataFromApi: function getDataFromApi() {
@@ -2720,39 +2796,60 @@ __webpack_require__.r(__webpack_exports__);
       this.dialogDelete = true;
     },
     deleteItemConfirm: function deleteItemConfirm() {
-      // this.elements.splice(this.editedIndex, 1)
-      // this.closeDelete()
-      if (this.editedIndex > -1) {
-        Object.assign(this.elements[this.editedIndex], this.editedItem);
-      } else {
-        // this.elements.push(this.editedItem)
-        this.elements.splice(this.editedIndex, 1);
-      } // this.close()
-
-
-      this.closeDelete();
-    },
-    close: function close() {
       var _this3 = this;
 
-      this.dialog = false;
-      this.$nextTick(function () {
-        _this3.editedItem = Object.assign({}, _this3.defaultItem);
-        _this3.editedIndex = -1;
+      var data = {
+        id: this.editedItem.id
+      };
+      _utils_http_commons__WEBPACK_IMPORTED_MODULE_0__.HTTP["delete"]("user/remove", {
+        data: data
+      }).then(function (response) {
+        _this3.getDataFromApi();
+
+        _this3.elements.splice(_this3.editedIndex, 1);
+
+        _this3.closeDelete();
+      })["catch"](function (e) {
+        _this3.loading = false;
       });
     },
-    closeDelete: function closeDelete() {
+    close: function close() {
       var _this4 = this;
 
-      this.dialogDelete = false;
+      this.dialog = false;
       this.$nextTick(function () {
         _this4.editedItem = Object.assign({}, _this4.defaultItem);
         _this4.editedIndex = -1;
       });
+      this.loading = false;
+    },
+    closeDelete: function closeDelete() {
+      var _this5 = this;
+
+      this.dialogDelete = false;
+      this.$nextTick(function () {
+        _this5.editedItem = Object.assign({}, _this5.defaultItem);
+        _this5.editedIndex = -1;
+      });
+      this.loading = false;
     },
     save: function save() {
+      var _this6 = this;
+
       if (this.editedIndex > -1) {
+        this.loading = true;
         Object.assign(this.elements[this.editedIndex], this.editedItem);
+        var data = {
+          id: this.editedItem.id,
+          first_name: this.editedItem.first_name,
+          last_name: this.editedItem.last_name,
+          email: this.editedItem.email,
+          address: this.editedItem.address,
+          phone_number: this.editedItem.phone_number
+        };
+        _utils_http_commons__WEBPACK_IMPORTED_MODULE_0__.HTTP.post('user/update', data).then(function (response) {
+          _this6.getDataFromApi();
+        });
       } else {
         this.elements.push(this.editedItem);
       }
@@ -42202,7 +42299,7 @@ var render = function() {
                       [
                         _c("validation-provider", {
                           attrs: {
-                            name: "First Name",
+                            name: "Nombre(s)",
                             rules: "required",
                             counter: 20
                           },
@@ -42218,7 +42315,7 @@ var render = function() {
                                         "clear-icon": "mdi-close",
                                         clearable: "",
                                         "error-messages": errors,
-                                        label: "First Name",
+                                        label: "Nombre(s)",
                                         required: ""
                                       },
                                       model: {
@@ -42240,7 +42337,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("validation-provider", {
                           attrs: {
-                            name: "Last Name",
+                            name: "Apellido(s)",
                             rules: "required",
                             counter: 20
                           },
@@ -42256,7 +42353,7 @@ var render = function() {
                                         "clear-icon": "mdi-close",
                                         clearable: "",
                                         "error-messages": errors,
-                                        label: "Last Name",
+                                        label: "Apellido(s)",
                                         required: ""
                                       },
                                       model: {
@@ -42277,7 +42374,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("validation-provider", {
-                          attrs: { name: "Email", rules: "required|email" },
+                          attrs: {
+                            name: "Correo electrónico",
+                            rules: "required|email"
+                          },
                           scopedSlots: _vm._u(
                             [
                               {
@@ -42290,7 +42390,7 @@ var render = function() {
                                         "clear-icon": "mdi-close",
                                         clearable: "",
                                         "error-messages": errors,
-                                        label: "Email",
+                                        label: "Correo electrónico",
                                         required: ""
                                       },
                                       model: {
@@ -42311,7 +42411,75 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("validation-provider", {
-                          attrs: { name: "Password", rules: "required" },
+                          attrs: { name: "Dirección", rules: "required" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "clear-icon": "mdi-close",
+                                        clearable: "",
+                                        "error-messages": errors,
+                                        label: "Dirección",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.address,
+                                        callback: function($$v) {
+                                          _vm.address = $$v
+                                        },
+                                        expression: "address"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("validation-provider", {
+                          attrs: { name: "Teléfono", rules: "required" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(ref) {
+                                  var errors = ref.errors
+                                  return [
+                                    _c("v-text-field", {
+                                      attrs: {
+                                        "clear-icon": "mdi-close",
+                                        clearable: "",
+                                        "error-messages": errors,
+                                        label: "Teléfono",
+                                        required: ""
+                                      },
+                                      model: {
+                                        value: _vm.phone_number,
+                                        callback: function($$v) {
+                                          _vm.phone_number = $$v
+                                        },
+                                        expression: "phone_number"
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("validation-provider", {
+                          attrs: { name: "Contraseña", rules: "required" },
                           scopedSlots: _vm._u(
                             [
                               {
@@ -42335,7 +42503,7 @@ var render = function() {
                                         type: _vm.showPassword
                                           ? "text"
                                           : "password",
-                                        label: "Password",
+                                        label: "Contraseña",
                                         required: ""
                                       },
                                       on: {
@@ -42361,7 +42529,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("validation-provider", {
-                          attrs: { name: "Repeat Password", rules: "required" },
+                          attrs: {
+                            name: "Repetir Contraseña",
+                            rules: "required"
+                          },
                           scopedSlots: _vm._u(
                             [
                               {
@@ -42384,7 +42555,7 @@ var render = function() {
                                         type: _vm.showRepeatPassword
                                           ? "text"
                                           : "password",
-                                        label: "Repeat Password",
+                                        label: "Repetir Contraseña",
                                         required: ""
                                       },
                                       on: {
@@ -42605,15 +42776,42 @@ var render = function() {
                                         _c("v-text-field", {
                                           attrs: { label: "Nombre" },
                                           model: {
-                                            value: _vm.editedItem.name,
+                                            value: _vm.editedItem.first_name,
                                             callback: function($$v) {
                                               _vm.$set(
                                                 _vm.editedItem,
-                                                "name",
+                                                "first_name",
                                                 $$v
                                               )
                                             },
-                                            expression: "editedItem.name"
+                                            expression: "editedItem.first_name"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-row",
+                                  [
+                                    _c(
+                                      "v-col",
+                                      [
+                                        _c("v-text-field", {
+                                          attrs: { label: "Apellido" },
+                                          model: {
+                                            value: _vm.editedItem.last_name,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.editedItem,
+                                                "last_name",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "editedItem.last_name"
                                           }
                                         })
                                       ],
@@ -42641,6 +42839,61 @@ var render = function() {
                                               )
                                             },
                                             expression: "editedItem.email"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-row",
+                                  [
+                                    _c(
+                                      "v-col",
+                                      [
+                                        _c("v-text-field", {
+                                          attrs: { label: "Dirección" },
+                                          model: {
+                                            value: _vm.editedItem.address,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.editedItem,
+                                                "address",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "editedItem.address"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-row",
+                                  [
+                                    _c(
+                                      "v-col",
+                                      [
+                                        _c("v-text-field", {
+                                          attrs: { label: "Teléfono" },
+                                          model: {
+                                            value: _vm.editedItem.phone_number,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.editedItem,
+                                                "phone_number",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "editedItem.phone_number"
                                           }
                                         })
                                       ],
@@ -42699,7 +42952,7 @@ var render = function() {
                 _c(
                   "v-dialog",
                   {
-                    attrs: { "max-width": "500px" },
+                    attrs: { "max-width": "475px" },
                     model: {
                       value: _vm.dialogDelete,
                       callback: function($$v) {
@@ -42712,8 +42965,8 @@ var render = function() {
                     _c(
                       "v-card",
                       [
-                        _c("v-card-title", { staticClass: "text-h5" }, [
-                          _vm._v("Está seguro que desea eliminar el cliente ?")
+                        _c("v-card-title", { staticClass: "text-h6 " }, [
+                          _vm._v("¿Está seguro que desea eliminar el cliente?")
                         ]),
                         _vm._v(" "),
                         _c(
@@ -103682,7 +103935,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_vue__;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/","#USER"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\Mis trabajos\\\\CloudGroup\\\\cloud-group-services\\\\cloud-group-services","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\xampp\\\\htdocs\\\\Trabajo Cloud-Group-Services\\\\cloud-group-services"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"C:\\\\xampp\\\\htdocs\\\\Trabajo Cloud-Group-Services\\\\cloud-group-services","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 

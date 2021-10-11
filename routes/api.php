@@ -34,7 +34,8 @@ Route::group([
 });
 /** Users */
 Route::post('/user/search',[UserController::class, 'search']);
-Route::get('/manage/{user}', [UserController::class, 'show']);
+Route::delete('/user/remove',[UserController::class, 'remove']);
+Route::post('/user/update',[UserController::class, 'update']);
 /** Service zip code */
 Route::post('/service/search-zip-code',[ServiceController::class, 'searchZipCode']);
 Route::post('/service/update-zip-codes',[ServiceController::class, 'updateZipCode']);
