@@ -41,10 +41,11 @@
                     </v-icon>
                 </v-btn>
             </template>
-            <template v-slot:item.sobreprecio="{ item }">
+            <template v-slot:item.pluss_price="{ item }">
                 <v-text-field
                     placeholder="Sobrecio"
-                    v-model="item.sobreprecio"
+                    v-model="item.pluss_price"
+                    :rules = "plussPriceRule"
                 ></v-text-field>
             </template>
 
@@ -63,6 +64,7 @@ import {HTTP} from "../../../utils/http_commons";
 
 export default {
     data: () => ({
+        plussPriceRule:  [v => /^([1-9]\d*(\.\d+)?|null)$/.test(v) || 'Solo números enteros o decimales'],
         singleSelect: false,
         selected: [],
         selectedId: [],
@@ -77,7 +79,7 @@ export default {
             {text: 'Provincia', value: 'province'},
             {text: 'Municipio', value: 'populate'},
             {text: 'Código Postal', value: 'zip_code', sortable: false},
-            {text: 'Sobreprecio', value: 'sobreprecio', sortable: false}
+            {text: 'Sobreprecio', value: 'pluss_price', sortable: false}
         ],
         editedIndex: -1,
         editedItem: {
@@ -128,8 +130,6 @@ export default {
     methods: {
         aplicar(){
             this.loading = true
-            this.elements = [];
-            this.totalElements = 0;
             const data = {selected:this.selected, elements: this.elements};
             HTTP.post(`service/update-zip-codes`, data)
                 .then(response => {

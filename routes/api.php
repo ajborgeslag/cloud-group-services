@@ -33,6 +33,8 @@ Route::group([
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
 /** Users */
-Route::post('/service/search-zip-code',[ServiceController::class, 'searchZipCode']);
 Route::post('/user/search',[UserController::class, 'search']);
 Route::get('/manage/{user}', [UserController::class, 'show']);
+/** Service zip code */
+Route::post('/service/search-zip-code',[ServiceController::class, 'searchZipCode']);
+Route::post('/service/update-zip-codes',[ServiceController::class, 'updateZipCode']);

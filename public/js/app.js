@@ -2864,6 +2864,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /*export default {
     name: "manage"
@@ -2872,6 +2873,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      plussPriceRule: [function (v) {
+        return /^([1-9]\d*(\.\d+)?|null)$/.test(v) || 'Solo números enteros o decimales';
+      }],
       singleSelect: false,
       selected: [],
       selectedId: [],
@@ -2894,7 +2898,7 @@ __webpack_require__.r(__webpack_exports__);
         sortable: false
       }, {
         text: 'Sobreprecio',
-        value: 'sobreprecio',
+        value: 'pluss_price',
         sortable: false
       }],
       editedIndex: -1,
@@ -2946,8 +2950,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      this.elements = [];
-      this.totalElements = 0;
       var data = {
         selected: this.selected,
         elements: this.elements
@@ -42915,18 +42917,18 @@ var render = function() {
             proxy: true
           },
           {
-            key: "item.sobreprecio",
+            key: "item.pluss_price",
             fn: function(ref) {
               var item = ref.item
               return [
                 _c("v-text-field", {
-                  attrs: { placeholder: "Sobrecio" },
+                  attrs: { placeholder: "Sobrecio", rules: _vm.plussPriceRule },
                   model: {
-                    value: item.sobreprecio,
+                    value: item.pluss_price,
                     callback: function($$v) {
-                      _vm.$set(item, "sobreprecio", $$v)
+                      _vm.$set(item, "pluss_price", $$v)
                     },
-                    expression: "item.sobreprecio"
+                    expression: "item.pluss_price"
                   }
                 })
               ]
